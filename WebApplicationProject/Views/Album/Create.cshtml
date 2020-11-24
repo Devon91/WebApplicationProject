@@ -10,25 +10,20 @@
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Create">
+        <form asp-action="Create" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="Album.Title" class="control-label"></label>
                 <input asp-for="Album.Title" class="form-control" />
                 <span asp-validation-for="Album.Title" class="text-danger"></span>
             </div>
-            @*<div class="form-group">
-            <label asp-for="Album.ImageFile" class="control-label">Image</label>
-            <div class="custom-file">
-                <input asp-for="Album.ImageFile" class="custom-file-input" accept="image/*" >
-                <label class="custom-file-label" for="customFile">Choose file</label>
-            </div>
-            <span asp-validation-for="Album.ImageFile" class="text-danger"></span>
-        </div>*@
             <div class="form-group">
-                <label asp-for="Album.ImageFile" class="control-label"></label>
-                <input asp-for="Album.ImageFile" accept="image/*" />
-                <span asp-validation-for="Album.ImageFile" class="text-danger"></span>
+                <label asp-for="CoverArtImage" class="control-label"></label>
+                <div class="custom-file">
+                    <input asp-for="CoverArtImage" class="custom-file-input" id="customFile" />
+                    <label class="custom-file-label" for="customFile">Choose file</label>
+                </div>
+                <span asp-validation-for="CoverArtImage" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Album.ReleaseDate" class="control-label">Release Date</label>
