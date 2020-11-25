@@ -68,10 +68,7 @@ namespace WebApplicationProject.Controllers
             if (ModelState.IsValid)
             {
                 string uniqueFileName = UploadedFile(viewModel);
-                Album album = new Album
-                {
-                    CoverArt = uniqueFileName
-                };
+                viewModel.Album.CoverArt = uniqueFileName;
                 _context.Add(viewModel.Album);
 
                 //_context.Add(album);
