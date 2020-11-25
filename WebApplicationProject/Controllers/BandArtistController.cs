@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using WebApplicationProject.Data;
 using WebApplicationProject.Models;
+using WebApplicationProject.ViewModels;
 
 namespace WebApplicationProject.Controllers
 {
@@ -46,7 +47,11 @@ namespace WebApplicationProject.Controllers
         // GET: BandArtist/Create
         public IActionResult Create()
         {
-            return View();
+            CreateBandArtistViewModel viewModel = new CreateBandArtistViewModel();
+            viewModel.Artists = new SelectList(_context.Artists, "ArtistID", "FirstName");
+            viewModel.Bands = new SelectList(_context.Bands, "BandID", "Name");
+            viewModel.Roles = new SelectList(_context.ArtistRoles, "RoleID", "Name");
+            return View(viewModel);
         }
 
         // POST: BandArtist/Create
@@ -54,15 +59,15 @@ namespace WebApplicationProject.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("BandArtistID,JoinDate,LeaveDate")] BandArtist bandArtist)
+        public async Task<IActionResult> Create(CreateBandArtistViewModel viewModel)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(bandArtist);
+                _context.Add(viewModel.BandArtist);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(bandArtist);
+            return View(viewModel);
         }
 
         // GET: BandArtist/Edit/5

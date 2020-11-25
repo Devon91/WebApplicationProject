@@ -1,4 +1,4 @@
-﻿@model WebApplicationProject.Models.Band
+﻿@model WebApplicationProject.ViewModels.CreateBandViewModel
 
 @{
     ViewData["Title"] = "Create";
@@ -13,15 +13,25 @@
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="Name" class="control-label"></label>
-                <input asp-for="Name" class="form-control" />
-                <span asp-validation-for="Name" class="text-danger"></span>
+                <label asp-for="Band.Name" class="control-label"></label>
+                <input asp-for="Band.Name" class="form-control" />
+                <span asp-validation-for="Band.Name" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Background" class="control-label"></label>
-                <input asp-for="Background" class="form-control" />
-                <span asp-validation-for="Background" class="text-danger"></span>
+                <label asp-for="Band.Background" class="control-label"></label>
+                <input asp-for="Band.Background" class="form-control" />
+                <span asp-validation-for="Band.Background" class="text-danger"></span>
             </div>
+            @*<div class="form-group">
+                <label asp-for="BandArtist.ArtistID" class="control-label">Band</label>
+                <select asp-for="BandArtist.ArtistID" class="form-control" asp-items="Model.Artists"></select>
+                <span asp-validation-for="BandArtist.ArtistID" class="text-danger"></span>
+            </div>*@
+            @*<div class="form-group">
+                <label asp-for="BandArtist.RoleID" class="control-label">Role</label>
+                <select asp-for="BandArtist.RoleID" class="form-control" asp-items="Model.BandArtist."></select>
+                <span asp-validation-for="BandArtist.RoleID" class="text-danger"></span>
+            </div>*@
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>
