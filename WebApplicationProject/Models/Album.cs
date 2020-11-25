@@ -21,6 +21,7 @@ namespace WebApplicationProject.Models
         [NotMapped]
         [DisplayName("Upload File")]
         public IFormFile ImageFile { get; set; }
+        //end test
 
         public string CoverArt { get; set; }
         public int BandID { get; set; }

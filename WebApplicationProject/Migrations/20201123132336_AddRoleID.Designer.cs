@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WebApplicationProject.Data;
 
 namespace WebApplicationProject.Migrations
 {
     [DbContext(typeof(WebApplicationProjectContext))]
-    partial class WebApplicationProjectContextModelSnapshot : ModelSnapshot
+    [Migration("20201123132336_AddRoleID")]
+    partial class AddRoleID
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -317,7 +319,7 @@ namespace WebApplicationProject.Migrations
                     b.Property<int>("ArtistID")
                         .HasColumnType("int");
 
-                    b.Property<int>("BandID")
+                    b.Property<int?>("BandID")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("JoinDate")
@@ -532,9 +534,7 @@ namespace WebApplicationProject.Migrations
 
                     b.HasOne("WebApplicationProject.Models.Band", "Band")
                         .WithMany("BandArtists")
-                        .HasForeignKey("BandID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("BandID");
 
                     b.HasOne("WebApplicationProject.Models.Role", "Role")
                         .WithMany("BandArtists")

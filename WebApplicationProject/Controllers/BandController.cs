@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using WebApplicationProject.Data;
 using WebApplicationProject.Models;
+using WebApplicationProject.ViewModels;
 
 namespace WebApplicationProject.Controllers
 {
@@ -46,6 +47,10 @@ namespace WebApplicationProject.Controllers
         // GET: Band/Create
         public IActionResult Create()
         {
+            CreateBandViewModel viewModel = new CreateBandViewModel();
+            viewModel.Band = new Band();
+            viewModel.Artists = new SelectList(_context.Artists, "BandArtistID", "FirstName");
+            viewModel.Roles = new SelectList(_context.Roles, "RoleID", "Name");
             return View();
         }
 
