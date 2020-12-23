@@ -153,7 +153,8 @@ namespace WebApplicationProject.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Details), "Band", new { id });
+                //return RedirectToAction(nameof(Index));
             }
             return View(band);
         }
