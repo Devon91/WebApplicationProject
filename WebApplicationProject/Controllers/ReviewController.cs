@@ -66,10 +66,10 @@ namespace WebApplicationProject.Controllers
         public async Task<IActionResult> Create(CreateReviewViewModel viewModel, int id)
         {
             viewModel.Review.Album = _context.Albums.FirstOrDefault(x => x.AlbumID == id);
-
+            Gebruiker g = _context.Gebruikers.FirstOrDefault(x => x.Email == User.Identity.Name);
             if (ModelState.IsValid)
             {
-                viewModel.UserName = User.Identity.Name;
+                viewModel.Review.Gebruiker = g;
                 _context.Add(viewModel.Review);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Details), "Album", new { id });

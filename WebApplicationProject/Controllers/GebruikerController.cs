@@ -7,25 +7,28 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using WebApplicationProject.Data;
 using WebApplicationProject.Models;
+using WebApplicationProject.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 
-namespace WebApplicationProject.Controllers
+namespace WebApplicationProject
 {
-    public class UserController : Controller
+    public class GebruikerController : Controller
     {
         private readonly WebApplicationProjectContext _context;
 
-        public UserController(WebApplicationProjectContext context)
+        public GebruikerController(WebApplicationProjectContext context)
         {
             _context = context;
         }
 
-        // GET: User
+        // GET: Gebruiker
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Gebruikers.ToListAsync());
+            var webApplicationProjectContext = _context.Gebruikers.Include(g => g.CustomUser);
+            return View(await webApplicationProjectContext.ToListAsync());
         }
 
-        // GET: User/Details/5
+        // GET: Gebruiker/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -33,28 +36,30 @@ namespace WebApplicationProject.Controllers
                 return NotFound();
             }
 
-            var user = await _context.Gebruikers
+            var gebruiker = await _context.Gebruikers
+                .Include(g => g.CustomUser)
                 .FirstOrDefaultAsync(m => m.GebruikerID == id);
-            if (user == null)
+            if (gebruiker == null)
             {
                 return NotFound();
             }
 
-            return View(user);
+            return View(gebruiker);
         }
 
-        // GET: User/Create
+        // GET: Gebruiker/Create
         public IActionResult Create()
         {
+            ViewData["UserID"] = new SelectList(_context.Users, "Id", "Id");
             return View();
         }
 
-        // POST: User/Create
+        // POST: Gebruiker/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("UserID,UserName,Password,Email,PhoneNumber")] Gebruiker gebruiker)
+        public async Task<IActionResult> Create([Bind("GebruikerID,UserName,Password,Email,PhoneNumber,UserID")] Gebruiker gebruiker)
         {
             if (ModelState.IsValid)
             {
@@ -62,10 +67,11 @@ namespace WebApplicationProject.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["UserID"] = new SelectList(_context.Users, "Id", "Id", gebruiker.UserID);
             return View(gebruiker);
         }
 
-        // GET: User/Edit/5
+        // GET: Gebruiker/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -73,20 +79,21 @@ namespace WebApplicationProject.Controllers
                 return NotFound();
             }
 
-            var user = await _context.Gebruikers.FindAsync(id);
-            if (user == null)
+            var gebruiker = await _context.Gebruikers.FindAsync(id);
+            if (gebruiker == null)
             {
                 return NotFound();
             }
-            return View(user);
+            ViewData["UserID"] = new SelectList(_context.Users, "Id", "Id", gebruiker.UserID);
+            return View(gebruiker);
         }
 
-        // POST: User/Edit/5
+        // POST: Gebruiker/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("UserID,UserName,Password,Email,PhoneNumber")] Gebruiker gebruiker)
+        public async Task<IActionResult> Edit(int id, [Bind("GebruikerID,UserName,Password,Email,PhoneNumber,UserID")] Gebruiker gebruiker)
         {
             if (id != gebruiker.GebruikerID)
             {
@@ -102,7 +109,7 @@ namespace WebApplicationProject.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!UserExists(gebruiker.GebruikerID))
+                    if (!GebruikerExists(gebruiker.GebruikerID))
                     {
                         return NotFound();
                     }
@@ -113,10 +120,11 @@ namespace WebApplicationProject.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["UserID"] = new SelectList(_context.Users, "Id", "Id", gebruiker.UserID);
             return View(gebruiker);
         }
 
-        // GET: User/Delete/5
+        // GET: Gebruiker/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -124,28 +132,29 @@ namespace WebApplicationProject.Controllers
                 return NotFound();
             }
 
-            var user = await _context.Gebruikers
+            var gebruiker = await _context.Gebruikers
+                .Include(g => g.CustomUser)
                 .FirstOrDefaultAsync(m => m.GebruikerID == id);
-            if (user == null)
+            if (gebruiker == null)
             {
                 return NotFound();
             }
 
-            return View(user);
+            return View(gebruiker);
         }
 
-        // POST: User/Delete/5
+        // POST: Gebruiker/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var user = await _context.Gebruikers.FindAsync(id);
-            _context.Gebruikers.Remove(user);
+            var gebruiker = await _context.Gebruikers.FindAsync(id);
+            _context.Gebruikers.Remove(gebruiker);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool UserExists(int id)
+        private bool GebruikerExists(int id)
         {
             return _context.Gebruikers.Any(e => e.GebruikerID == id);
         }

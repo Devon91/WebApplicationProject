@@ -41,12 +41,12 @@
                     @foreach (var item in Model.Songs)
                     {
                         <tr>
-                            <td>@item.Title</td>
+                            <td>@item.TrackNumber. @item.Title</td>
                             <td class="pl-3"><a asp-action="Edit" asp-route-id="@item.SongID" asp-controller="Song">Edit</a> |</td>
                             <td><a asp-action="Delete" asp-route-id="@item.SongID" asp-controller="Song">Delete</a></td>
                         </tr>
                         <tr>
-                            <td>playtime: @item.TrackLength</td>
+                            @*<td>playtime: @item.TrackLength</td>*@
                         </tr>
                     }
                 </table>
@@ -80,7 +80,7 @@
                             @item.Artist.FirstName
                             @item.Artist.LastName
                             @*<td><a asp-action="Edit" asp-route-id="@item.ArtistID" asp-controller="BandArtist">Edit</a> |</td>
-                        <td><a asp-action="Delete" asp-route-id="@item.ArtistID" asp-controller="BandArtist">Delete</a></td>*@
+                                <td><a asp-action="Delete" asp-route-id="@item.ArtistID" asp-controller="BandArtist">Delete</a></td>*@
                         </li>
                     }
                 </ul>
@@ -149,18 +149,22 @@
                     @foreach (var item in Model.Reviews)
                     {
                         <tr>
-                            <td>@item.Text</td>
-                            <td>@item.User.UserName</td>
+                            <td class="pt-3">@item.Text</td>
+                        </tr>
+                        <tr>
+                            <td class="pt-2">
+                                <a asp-action="Edit" asp-route-id="@item.ReviewID" asp-route-albumID="@item.Album.AlbumID" asp-controller="Review">Edit</a>
+                                <a class="ml-3" asp-action="Delete" asp-route-id="@item.ReviewID" asp-controller="Review">Delete</a>
+                            </td>
+                            <td class="pt-2 text-right">@item.Gebruiker.UserName</td>
+                            <td class="pl-3 pt-2">@item.ReviewRating</td>
                         </tr>
                         @*<tr>
-                                <td class="pr-5">@item.User.UserName</td>
-                            </tr>*@
-                        <tr>
                             <td class="pb-4">
                                 <a asp-action="Edit" asp-route-id="@item.ReviewID" asp-route-albumID="@item.Album.AlbumID" asp-controller="Review">Edit</a>
                                 <a class="ml-3" asp-action="Delete" asp-route-id="@item.ReviewID" asp-controller="Review">Delete</a>
                             </td>
-                        </tr>
+                        </tr>*@
                     }
                 </table>
             }
@@ -168,7 +172,7 @@
             {
                 <p>Nog geen reviews toegevoegd</p>
             }
-            <a class="btn btn-primary" asp-action="Create" asp-route-id="@Model.AlbumID" asp-controller="Review">Add Review</a>
+            <a class="btn btn-primary mt-3" asp-action="Create" asp-route-id="@Model.AlbumID" asp-controller="Review">Add Review</a>
         </div>
     </div>
 

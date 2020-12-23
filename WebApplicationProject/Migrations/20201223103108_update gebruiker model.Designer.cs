@@ -10,8 +10,8 @@ using WebApplicationProject.Data;
 namespace WebApplicationProject.Migrations
 {
     [DbContext(typeof(WebApplicationProjectContext))]
-    [Migration("20201123093736_AddGenreIDToAlbum")]
-    partial class AddGenreIDToAlbum
+    [Migration("20201223103108_update gebruiker model")]
+    partial class updategebruikermodel
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -182,9 +182,6 @@ namespace WebApplicationProject.Migrations
                     b.Property<DateTimeOffset?>("LockoutEnd")
                         .HasColumnType("datetimeoffset");
 
-                    b.Property<string>("Naam")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("NormalizedEmail")
                         .HasColumnType("nvarchar(256)")
                         .HasMaxLength(256);
@@ -241,14 +238,13 @@ namespace WebApplicationProject.Migrations
                     b.Property<string>("CoverArt")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("CriticsRating")
+                    b.Property<int?>("CriticsRating")
                         .HasColumnType("int");
 
                     b.Property<int>("GenreID")
                         .HasColumnType("int");
 
                     b.Property<string>("MusicLabel")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Producer")
@@ -279,6 +275,9 @@ namespace WebApplicationProject.Migrations
 
                     b.Property<string>("FirstName")
                         .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FullName")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("LastName")
@@ -316,19 +315,19 @@ namespace WebApplicationProject.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int?>("ArtistID")
+                    b.Property<int>("ArtistID")
                         .HasColumnType("int");
 
-                    b.Property<int?>("BandID")
+                    b.Property<int>("BandID")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("JoinDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime>("LeaveDate")
+                    b.Property<DateTime?>("LeaveDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("RoleID")
+                    b.Property<int>("RoleID")
                         .HasColumnType("int");
 
                     b.HasKey("BandArtistID");
@@ -340,6 +339,37 @@ namespace WebApplicationProject.Migrations
                     b.HasIndex("RoleID");
 
                     b.ToTable("BandArtist");
+                });
+
+            modelBuilder.Entity("WebApplicationProject.Models.Gebruiker", b =>
+                {
+                    b.Property<int>("GebruikerID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Password")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserID")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("UserName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("GebruikerID");
+
+                    b.HasIndex("UserID")
+                        .IsUnique()
+                        .HasFilter("[UserID] IS NOT NULL");
+
+                    b.ToTable("Gebruiker");
                 });
 
             modelBuilder.Entity("WebApplicationProject.Models.Genre", b =>
@@ -368,6 +398,9 @@ namespace WebApplicationProject.Migrations
                     b.Property<int?>("AlbumID")
                         .HasColumnType("int");
 
+                    b.Property<int?>("GebruikerID")
+                        .HasColumnType("int");
+
                     b.Property<int>("ReviewRating")
                         .HasColumnType("int");
 
@@ -375,14 +408,11 @@ namespace WebApplicationProject.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("UserID")
-                        .HasColumnType("int");
-
                     b.HasKey("ReviewID");
 
                     b.HasIndex("AlbumID");
 
-                    b.HasIndex("UserID");
+                    b.HasIndex("GebruikerID");
 
                     b.ToTable("Review");
                 });
@@ -410,7 +440,7 @@ namespace WebApplicationProject.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int?>("AlbumID")
+                    b.Property<int>("AlbumID")
                         .HasColumnType("int");
 
                     b.Property<string>("Title")
@@ -428,34 +458,6 @@ namespace WebApplicationProject.Migrations
                     b.HasIndex("AlbumID");
 
                     b.ToTable("Song");
-                });
-
-            modelBuilder.Entity("WebApplicationProject.Models.User", b =>
-                {
-                    b.Property<int>("UserID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Password")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("PhoneNumber")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("UserName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("UserID");
-
-                    b.ToTable("User");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -528,15 +530,28 @@ namespace WebApplicationProject.Migrations
                 {
                     b.HasOne("WebApplicationProject.Models.Artist", "Artist")
                         .WithMany("BandArtists")
-                        .HasForeignKey("ArtistID");
+                        .HasForeignKey("ArtistID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("WebApplicationProject.Models.Band", "Band")
                         .WithMany("BandArtists")
-                        .HasForeignKey("BandID");
+                        .HasForeignKey("BandID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("WebApplicationProject.Models.Role", "Role")
                         .WithMany("BandArtists")
-                        .HasForeignKey("RoleID");
+                        .HasForeignKey("RoleID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("WebApplicationProject.Models.Gebruiker", b =>
+                {
+                    b.HasOne("WebApplicationProject.Areas.Identity.Data.CustomUser", "CustomUser")
+                        .WithOne("Gebruiker")
+                        .HasForeignKey("WebApplicationProject.Models.Gebruiker", "UserID");
                 });
 
             modelBuilder.Entity("WebApplicationProject.Models.Review", b =>
@@ -545,16 +560,18 @@ namespace WebApplicationProject.Migrations
                         .WithMany("Reviews")
                         .HasForeignKey("AlbumID");
 
-                    b.HasOne("WebApplicationProject.Models.User", "User")
+                    b.HasOne("WebApplicationProject.Models.Gebruiker", "Gebruiker")
                         .WithMany("Reviews")
-                        .HasForeignKey("UserID");
+                        .HasForeignKey("GebruikerID");
                 });
 
             modelBuilder.Entity("WebApplicationProject.Models.Song", b =>
                 {
                     b.HasOne("WebApplicationProject.Models.Album", "Album")
                         .WithMany("Songs")
-                        .HasForeignKey("AlbumID");
+                        .HasForeignKey("AlbumID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

@@ -10,8 +10,8 @@ using WebApplicationProject.Data;
 namespace WebApplicationProject.Migrations
 {
     [DbContext(typeof(WebApplicationProjectContext))]
-    [Migration("20201221165939_Minor change to Artist")]
-    partial class MinorchangetoArtist
+    [Migration("20201223090820_New start")]
+    partial class Newstart
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -182,9 +182,6 @@ namespace WebApplicationProject.Migrations
                     b.Property<DateTimeOffset?>("LockoutEnd")
                         .HasColumnType("datetimeoffset");
 
-                    b.Property<string>("Naam")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("NormalizedEmail")
                         .HasColumnType("nvarchar(256)")
                         .HasMaxLength(256);
@@ -344,6 +341,41 @@ namespace WebApplicationProject.Migrations
                     b.ToTable("BandArtist");
                 });
 
+            modelBuilder.Entity("WebApplicationProject.Models.Gebruiker", b =>
+                {
+                    b.Property<int>("GebruikerID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Password")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PhoneNumber")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserID")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("UserName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("GebruikerID");
+
+                    b.HasIndex("UserID")
+                        .IsUnique()
+                        .HasFilter("[UserID] IS NOT NULL");
+
+                    b.ToTable("Gebruiker");
+                });
+
             modelBuilder.Entity("WebApplicationProject.Models.Genre", b =>
                 {
                     b.Property<int>("GenreID")
@@ -370,6 +402,9 @@ namespace WebApplicationProject.Migrations
                     b.Property<int?>("AlbumID")
                         .HasColumnType("int");
 
+                    b.Property<int?>("GebruikerID")
+                        .HasColumnType("int");
+
                     b.Property<int>("ReviewRating")
                         .HasColumnType("int");
 
@@ -377,14 +412,11 @@ namespace WebApplicationProject.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("UserID")
-                        .HasColumnType("int");
-
                     b.HasKey("ReviewID");
 
                     b.HasIndex("AlbumID");
 
-                    b.HasIndex("UserID");
+                    b.HasIndex("GebruikerID");
 
                     b.ToTable("Review");
                 });
@@ -430,34 +462,6 @@ namespace WebApplicationProject.Migrations
                     b.HasIndex("AlbumID");
 
                     b.ToTable("Song");
-                });
-
-            modelBuilder.Entity("WebApplicationProject.Models.User", b =>
-                {
-                    b.Property<int>("UserID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Password")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("PhoneNumber")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("UserName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("UserID");
-
-                    b.ToTable("User");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -547,15 +551,22 @@ namespace WebApplicationProject.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("WebApplicationProject.Models.Gebruiker", b =>
+                {
+                    b.HasOne("WebApplicationProject.Areas.Identity.Data.CustomUser", "CustomUser")
+                        .WithOne("Gebruiker")
+                        .HasForeignKey("WebApplicationProject.Models.Gebruiker", "UserID");
+                });
+
             modelBuilder.Entity("WebApplicationProject.Models.Review", b =>
                 {
                     b.HasOne("WebApplicationProject.Models.Album", "Album")
                         .WithMany("Reviews")
                         .HasForeignKey("AlbumID");
 
-                    b.HasOne("WebApplicationProject.Models.User", "User")
+                    b.HasOne("WebApplicationProject.Models.Gebruiker", "Gebruiker")
                         .WithMany("Reviews")
-                        .HasForeignKey("UserID");
+                        .HasForeignKey("GebruikerID");
                 });
 
             modelBuilder.Entity("WebApplicationProject.Models.Song", b =>

@@ -41,12 +41,14 @@ namespace WebApplicationProject.Controllers
 
             var album = await _context.Albums
                 .Include(x => x.Band)
-                .Include(x => x.Songs)//.OrderBy(y => y.TrackNumber))
-                .Include(x => x.Reviews)
+                //.Include(x => x.Songs)
+                .Include(x => x.Reviews).ThenInclude(y => y.Gebruiker)
                 .Include(x => x.Genre)
                 .Include(x => x.Band.BandArtists).ThenInclude(y => y.Artist)
                 .Include(x => x.Band.BandArtists).ThenInclude(y => y.Role)
                 .FirstOrDefaultAsync(m => m.AlbumID == id);
+
+            album.Songs = _context.Songs.Where(x => x.AlbumID == id).OrderBy(x => x.TrackNumber).ToList();
 
             if (album == null)
             {
@@ -81,14 +83,25 @@ namespace WebApplicationProject.Controllers
             {
                 if (ModelState.IsValid)
                 {
+                    List<Album> albums = _context.Albums.Where(x => x.BandID == id).ToList();
+
                     string uniqueFileName = UploadedFile(viewModel);
                     viewModel.Album.CoverArt = uniqueFileName;
                     viewModel.Album.BandID = id;
-                    _context.Add(viewModel.Album);
 
-                    //_context.Add(album);
-                    await _context.SaveChangesAsync();
-                    return RedirectToAction(nameof(Index));
+                    if (!albums.Contains(viewModel.Album))
+                    {
+                        _context.Add(viewModel.Album);
+
+                        //_context.Add(album);
+                        await _context.SaveChangesAsync();
+                        return RedirectToAction(nameof(Details), "Band", new { id });
+                        //return RedirectToAction(nameof(Index));
+                    }
+                    else
+                    {
+                        return RedirectToAction(nameof(Create), "Album", new { id });
+                    }
                 }
             }
 
@@ -228,7 +241,7 @@ namespace WebApplicationProject.Controllers
             return uniqueFileName;
         }
 
-        public async Task<IActionResult> upcomming()
+        public async Task<IActionResult> Upcomming()
         {
             var albums = await _context.Albums.Include(x => x.Band).Where(x => x.ReleaseDate > DateTime.Now)
                 .ToListAsync();
@@ -237,7 +250,7 @@ namespace WebApplicationProject.Controllers
 
         public async Task<IActionResult> LatestReleases()
         {
-            var albums = await _context.Albums.Include(x => x.Band).Where(x => x.ReleaseDate < DateTime.Now)
+            var albums = await _context.Albums.Include(x => x.Band).Where(x => x.ReleaseDate < DateTime.Now).OrderByDescending(x => x.ReleaseDate)
                 .ToListAsync();
             return View(albums);
         }

@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace WebApplicationProject.Models
 {
-    public class Album
+    public partial class Album
     {
         public int AlbumID { get; set; }
         [Required(ErrorMessage = "Please enter a title")]
@@ -29,7 +29,8 @@ namespace WebApplicationProject.Models
         public Band Band { get; set; }
 
         //[Display(Name = "Datum aangemaakt")]
-        //[DataType(DataType.Date)]
+        
+        [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
         public DateTime ReleaseDate { get; set; }
 

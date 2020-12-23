@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using WebApplicationProject.Areas.Identity.Data;
 using WebApplicationProject.Data;
 using WebApplicationProject.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace WebApplicationProject.Areas.Identity.Pages.Account.Manage
 {
@@ -39,6 +40,10 @@ namespace WebApplicationProject.Areas.Identity.Pages.Account.Manage
 
         public class InputModel
         {
+            [Required]
+            [Display(Name = "Username")]
+            public string Username { get; set; }
+
             [Phone]
             [Display(Name = "Phone number")]
             public string PhoneNumber { get; set; }
@@ -51,10 +56,12 @@ namespace WebApplicationProject.Areas.Identity.Pages.Account.Manage
 
             Username = userName;
 
-            //User gebruiker = await _context.AppUsers.FirstOrDefault(x => x.UserID == user.Id)
+            Gebruiker gebruiker = await _context.Gebruikers.FirstOrDefaultAsync(x => x.UserID == user.Id);
+            user.Gebruiker = gebruiker;
 
             Input = new InputModel
             {
+                Username = user.Gebruiker.UserName,
                 PhoneNumber = phoneNumber
             };
         }
@@ -95,6 +102,13 @@ namespace WebApplicationProject.Areas.Identity.Pages.Account.Manage
                     return RedirectToPage();
                 }
             }
+
+            Gebruiker gebruiker = await _context.Gebruikers.FirstOrDefaultAsync(x => x.UserID == user.Id);
+            user.Gebruiker = gebruiker;
+
+            user.UserName = Input.Username;
+
+            await _userManager.UpdateAsync(user);
 
             await _signInManager.RefreshSignInAsync(user);
             StatusMessage = "Your profile has been updated";

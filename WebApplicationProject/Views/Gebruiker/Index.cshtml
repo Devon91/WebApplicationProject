@@ -1,4 +1,4 @@
-﻿@model IEnumerable<WebApplicationProject.Models.User>
+﻿@model IEnumerable<WebApplicationProject.Models.Gebruiker>
 
 @{
     ViewData["Title"] = "Index";
@@ -15,14 +15,17 @@
             <th>
                 @Html.DisplayNameFor(model => model.UserName)
             </th>
-            <th>
+            @*<th>
                 @Html.DisplayNameFor(model => model.Password)
-            </th>
+            </th>*@
             <th>
                 @Html.DisplayNameFor(model => model.Email)
             </th>
-            <th>
+            @*<th>
                 @Html.DisplayNameFor(model => model.PhoneNumber)
+            </th>*@
+            <th>
+                @Html.DisplayNameFor(model => model.CustomUser)
             </th>
             <th></th>
         </tr>
@@ -33,19 +36,22 @@
             <td>
                 @Html.DisplayFor(modelItem => item.UserName)
             </td>
-            <td>
+            @*<td>
                 @Html.DisplayFor(modelItem => item.Password)
-            </td>
+            </td>*@
             <td>
                 @Html.DisplayFor(modelItem => item.Email)
             </td>
-            <td>
+            @*<td>
                 @Html.DisplayFor(modelItem => item.PhoneNumber)
+            </td>*@
+            <td>
+                @Html.DisplayFor(modelItem => item.CustomUser.Id)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.UserID">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.UserID">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.UserID">Delete</a>
+                <a asp-action="Edit" asp-route-id="@item.GebruikerID">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.GebruikerID">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.GebruikerID">Delete</a>
             </td>
         </tr>
 }

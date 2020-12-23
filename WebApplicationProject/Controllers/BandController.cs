@@ -35,6 +35,21 @@ namespace WebApplicationProject.Controllers
             return View(viewModel);
         }
 
+        public async Task<IActionResult> Search(DetailBandViewModel viewModel)
+        {
+            if (!string.IsNullOrEmpty(viewModel.BandSearch))
+            {
+                viewModel.Bands = await _context.Bands
+                    .Where(b => b.Name.Contains(viewModel.BandSearch)).ToListAsync();
+            }
+            else
+            {
+                viewModel.Bands = await _context.Bands.ToListAsync();
+            }
+
+            return View("Index", viewModel);
+        }
+
         // GET: Band/Details/5
         public async Task<IActionResult> Details(int? id, DetailBandViewModel viewModel)
         {
@@ -78,10 +93,15 @@ namespace WebApplicationProject.Controllers
         {
             if (ModelState.IsValid)
             {
-                _context.Add(viewModel.Band);
-                await _context.SaveChangesAsync();
-                Band b = _context.Bands.FirstOrDefault(x => x.Name == viewModel.Band.Name);
-                return RedirectToAction(nameof(Details), "Band", new { id = b.BandID });
+                List<Band> bands = _context.Bands.ToList();
+
+                if (!bands.Contains(viewModel.Band))
+                {
+                    _context.Add(viewModel.Band);
+                    await _context.SaveChangesAsync();
+                    Band b = _context.Bands.FirstOrDefault(x => x.Name == viewModel.Band.Name);
+                    return RedirectToAction(nameof(Details), "Band", new { id = b.BandID });
+                }
                 //return RedirectToAction(nameof(Index));
             }
             return View(viewModel);

@@ -28,7 +28,7 @@
             </div>
             <div class="form-group">
                 <label asp-for="Album.ReleaseDate" class="control-label">Release Date</label>
-                <input asp-for="Album.ReleaseDate" class="form-control" />
+                <input asp-for="Album.ReleaseDate" type="date" class="form-control" />
                 <span asp-validation-for="Album.ReleaseDate" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -38,7 +38,7 @@
             </div>
             <div class="form-group">
                 <label asp-for="Album.CriticsRating" class="control-label">Rating</label>
-                <input asp-for="Album.CriticsRating" class="form-control" />
+                <input asp-for="Album.CriticsRating" class="form-control" min="0" max="10" />
                 <span asp-validation-for="Album.CriticsRating" class="text-danger"></span>
             </div>
             <div class="form-group">

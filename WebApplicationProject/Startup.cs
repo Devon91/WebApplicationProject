@@ -156,7 +156,7 @@ namespace WebApplicationProject
                 endpoints.MapRazorPages();
             });
 
-            //CreateUserRoles(serviceProvider).Wait();
+            CreateUserRoles(serviceProvider).Wait();
         }
 
         // https://stackoverflow.com/questions/42471866/how-to-create-roles-in-asp-net-core-and-assign-them-to-users

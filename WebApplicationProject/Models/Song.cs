@@ -11,8 +11,8 @@ namespace WebApplicationProject.Models
         public int SongID { get; set; }
         [Required]
         public string Title { get; set; }
-        [Required]
-        public int TrackLength { get; set; }
+        //[Required]
+        //public int TrackLength { get; set; }
         public Album Album { get; set; }
         public int AlbumID { get; set; }
         [Required]

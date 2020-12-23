@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace WebApplicationProject.Migrations
 {
-    public partial class InitialCreate : Migration
+    public partial class Newstart : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -17,8 +17,9 @@ namespace WebApplicationProject.Migrations
                 {
                     ArtistID = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    FirstName = table.Column<string>(nullable: true),
-                    LastName = table.Column<string>(nullable: true)
+                    FirstName = table.Column<string>(nullable: false),
+                    LastName = table.Column<string>(nullable: false),
+                    FullName = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -59,8 +60,7 @@ namespace WebApplicationProject.Migrations
                     TwoFactorEnabled = table.Column<bool>(nullable: false),
                     LockoutEnd = table.Column<DateTimeOffset>(nullable: true),
                     LockoutEnabled = table.Column<bool>(nullable: false),
-                    AccessFailedCount = table.Column<int>(nullable: false),
-                    Naam = table.Column<string>(nullable: true)
+                    AccessFailedCount = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -74,7 +74,7 @@ namespace WebApplicationProject.Migrations
                 {
                     BandID = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(nullable: true),
+                    Name = table.Column<string>(nullable: false),
                     Background = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
@@ -89,7 +89,7 @@ namespace WebApplicationProject.Migrations
                 {
                     GenreID = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(nullable: true)
+                    Name = table.Column<string>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -103,28 +103,11 @@ namespace WebApplicationProject.Migrations
                 {
                     RoleID = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(nullable: true)
+                    Name = table.Column<string>(nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Role", x => x.RoleID);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "User",
-                schema: "project",
-                columns: table => new
-                {
-                    UserID = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    UserName = table.Column<string>(nullable: true),
-                    Password = table.Column<string>(nullable: true),
-                    Email = table.Column<string>(nullable: true),
-                    PhoneNumber = table.Column<string>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_User", x => x.UserID);
                 });
 
             migrationBuilder.CreateTable(
@@ -245,19 +228,44 @@ namespace WebApplicationProject.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Gebruiker",
+                schema: "project",
+                columns: table => new
+                {
+                    GebruikerID = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    UserName = table.Column<string>(nullable: false),
+                    Password = table.Column<string>(nullable: false),
+                    Email = table.Column<string>(nullable: false),
+                    PhoneNumber = table.Column<string>(nullable: false),
+                    UserID = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Gebruiker", x => x.GebruikerID);
+                    table.ForeignKey(
+                        name: "FK_Gebruiker_AspNetUsers_UserID",
+                        column: x => x.UserID,
+                        principalSchema: "project",
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Album",
                 schema: "project",
                 columns: table => new
                 {
                     AlbumID = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Title = table.Column<string>(nullable: true),
-                    GenreID = table.Column<int>(nullable: true),
+                    Title = table.Column<string>(nullable: false),
+                    GenreID = table.Column<int>(nullable: false),
                     CoverArt = table.Column<string>(nullable: true),
-                    BandID = table.Column<int>(nullable: true),
+                    BandID = table.Column<int>(nullable: false),
                     ReleaseDate = table.Column<DateTime>(nullable: false),
                     MusicLabel = table.Column<string>(nullable: true),
-                    CriticsRating = table.Column<int>(nullable: false),
+                    CriticsRating = table.Column<int>(nullable: true),
                     Producer = table.Column<string>(nullable: true),
                     Award = table.Column<string>(nullable: true)
                 },
@@ -270,14 +278,14 @@ namespace WebApplicationProject.Migrations
                         principalSchema: "project",
                         principalTable: "Band",
                         principalColumn: "BandID",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Album_Genre_GenreID",
                         column: x => x.GenreID,
                         principalSchema: "project",
                         principalTable: "Genre",
                         principalColumn: "GenreID",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -288,10 +296,10 @@ namespace WebApplicationProject.Migrations
                     BandArtistID = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     JoinDate = table.Column<DateTime>(nullable: false),
-                    LeaveDate = table.Column<DateTime>(nullable: false),
-                    ArtistID = table.Column<int>(nullable: true),
-                    RoleID = table.Column<int>(nullable: true),
-                    BandID = table.Column<int>(nullable: true)
+                    LeaveDate = table.Column<DateTime>(nullable: true),
+                    ArtistID = table.Column<int>(nullable: false),
+                    RoleID = table.Column<int>(nullable: false),
+                    BandID = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -302,21 +310,21 @@ namespace WebApplicationProject.Migrations
                         principalSchema: "project",
                         principalTable: "Artist",
                         principalColumn: "ArtistID",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_BandArtist_Band_BandID",
                         column: x => x.BandID,
                         principalSchema: "project",
                         principalTable: "Band",
                         principalColumn: "BandID",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_BandArtist_Role_RoleID",
                         column: x => x.RoleID,
                         principalSchema: "project",
                         principalTable: "Role",
                         principalColumn: "RoleID",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -326,10 +334,10 @@ namespace WebApplicationProject.Migrations
                 {
                     ReviewID = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Text = table.Column<string>(nullable: true),
+                    Text = table.Column<string>(nullable: false),
                     AlbumID = table.Column<int>(nullable: true),
                     ReviewRating = table.Column<int>(nullable: false),
-                    UserID = table.Column<int>(nullable: true)
+                    GebruikerID = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -342,11 +350,11 @@ namespace WebApplicationProject.Migrations
                         principalColumn: "AlbumID",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Review_User_UserID",
-                        column: x => x.UserID,
+                        name: "FK_Review_Gebruiker_GebruikerID",
+                        column: x => x.GebruikerID,
                         principalSchema: "project",
-                        principalTable: "User",
-                        principalColumn: "UserID",
+                        principalTable: "Gebruiker",
+                        principalColumn: "GebruikerID",
                         onDelete: ReferentialAction.Restrict);
                 });
 
@@ -357,9 +365,9 @@ namespace WebApplicationProject.Migrations
                 {
                     SongID = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Title = table.Column<string>(nullable: true),
+                    Title = table.Column<string>(nullable: false),
                     TrackLength = table.Column<int>(nullable: false),
-                    AlbumID = table.Column<int>(nullable: true),
+                    AlbumID = table.Column<int>(nullable: false),
                     TrackNumber = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
@@ -371,7 +379,7 @@ namespace WebApplicationProject.Migrations
                         principalSchema: "project",
                         principalTable: "Album",
                         principalColumn: "AlbumID",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
@@ -451,16 +459,24 @@ namespace WebApplicationProject.Migrations
                 column: "RoleID");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Gebruiker_UserID",
+                schema: "project",
+                table: "Gebruiker",
+                column: "UserID",
+                unique: true,
+                filter: "[UserID] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Review_AlbumID",
                 schema: "project",
                 table: "Review",
                 column: "AlbumID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Review_UserID",
+                name: "IX_Review_GebruikerID",
                 schema: "project",
                 table: "Review",
-                column: "UserID");
+                column: "GebruikerID");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Song_AlbumID",
@@ -508,10 +524,6 @@ namespace WebApplicationProject.Migrations
                 schema: "project");
 
             migrationBuilder.DropTable(
-                name: "AspNetUsers",
-                schema: "project");
-
-            migrationBuilder.DropTable(
                 name: "Artist",
                 schema: "project");
 
@@ -520,11 +532,15 @@ namespace WebApplicationProject.Migrations
                 schema: "project");
 
             migrationBuilder.DropTable(
-                name: "User",
+                name: "Gebruiker",
                 schema: "project");
 
             migrationBuilder.DropTable(
                 name: "Album",
+                schema: "project");
+
+            migrationBuilder.DropTable(
+                name: "AspNetUsers",
                 schema: "project");
 
             migrationBuilder.DropTable(

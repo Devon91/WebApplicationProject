@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace WebApplicationProject.Models
 {
-    public class Band
+    public partial class Band
     {
         public int BandID { get; set; }
         [Required]

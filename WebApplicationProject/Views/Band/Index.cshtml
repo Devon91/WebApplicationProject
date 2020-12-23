@@ -7,9 +7,25 @@
 
 @*<h1>Index</h1>*@
 
-<p>
+<div class="row">
+    <div class="col-1"></div>
+    <form asp-controller="Band" asp-action="Search" method="get">
+        <div class="form-actions no-color">
+            <p>
+                Zoek een band:
+                <input asp-for="BandSearch" />
+                <input type="submit" value="Zoeken" class="btn btn-default" />
+                <a asp-controller="Band" asp-action="Index">Terug  naar volledige lijst</a>
+            </p>
+        </div>
+    </form>
+</div>
+<div class="row">
+    <div class="col-1"></div>
     <a asp-action="Create">Add Band</a>
-</p>
+</div>
+
+
 @*<table class="table">
     <thead>
         <tr>
@@ -25,12 +41,12 @@
     <tbody>*@
 
 @*<div class="row">
-    <div class="col-10"></div>
-    <div class="col-2 text-center">
-        <a asp-action="Create">Add Band</a>
-    </div>
+        <div class="col-10"></div>
+        <div class="col-2 text-center">
+            <a asp-action="Create">Add Band</a>
+        </div>
 
-</div>*@
+    </div>*@
 
 @foreach (var band in Model.Bands)
 {

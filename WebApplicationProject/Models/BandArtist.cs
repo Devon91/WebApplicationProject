@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace WebApplicationProject.Models
 {
-    public class BandArtist
+    public partial class BandArtist
     {
         public int BandArtistID { get; set; }
         [Required]
-        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
+        [DisplayFormat(DataFormatString = "{0:yyyy}")]
         public DateTime JoinDate { get; set; }
         public DateTime? LeaveDate { get; set; }
         public int ArtistID { get; set; }

@@ -35,7 +35,13 @@ namespace WebApplicationProject.Data
             modelBuilder.Entity<Review>().ToTable("Review");
             modelBuilder.Entity<Album>().ToTable("Album");
             modelBuilder.Entity<Song>().ToTable("Song");
-            modelBuilder.Entity<Gebruiker>().ToTable("User");
+            modelBuilder.Entity<Gebruiker>().ToTable("Gebruiker");
+
+            modelBuilder.Entity<CustomUser>()
+                .HasOne(g => g.Gebruiker)
+                .WithOne(c => c.CustomUser)
+                .HasForeignKey<Gebruiker>(g => g.UserID);
+
             modelBuilder.Entity<Genre>().ToTable("Genre");
             modelBuilder.Entity<Band>().ToTable("Band");
             modelBuilder.Entity<BandArtist>().ToTable("BandArtist");

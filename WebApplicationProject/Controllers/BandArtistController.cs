@@ -70,19 +70,37 @@ namespace WebApplicationProject.Controllers
         {
             if (ModelState.IsValid)
             {
-                int existsID = _context.Artists.FirstOrDefault(x => x.FirstName == viewModel.BandArtist.Artist.FirstName && x.LastName == viewModel.BandArtist.Artist.LastName).ArtistID;
-
-                if (existsID > 0)
+                //int existsID = _context.Artists.FirstOrDefault(x => x.FirstName == viewModel.BandArtist.Artist.FirstName && x.LastName == viewModel.BandArtist.Artist.LastName).ArtistID;
+                List<Artist> artists = _context.Artists.ToList();
+                List<BandArtist> bandArtists = _context.BandArtists.Where(x => x.BandID == id).ToList();
+                //if (existsID > 0)
+                //{
+                //    viewModel.BandArtist.Artist = _context.Artists.FirstOrDefault(x => x.ArtistID == existsID);
+                //}
+                if (artists.Contains(viewModel.BandArtist.Artist))
                 {
+                    int existsID = _context.Artists.FirstOrDefault(x => x.FirstName == viewModel.BandArtist.Artist.FirstName && x.LastName == viewModel.BandArtist.Artist.LastName).ArtistID;
                     viewModel.BandArtist.Artist = _context.Artists.FirstOrDefault(x => x.ArtistID == existsID);
                 }
 
                 viewModel.BandArtist.BandID = id;
 
+                if (!bandArtists.Contains(viewModel.BandArtist))
+                {
+                    _context.Add(viewModel.BandArtist);
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(Details), "Band", new { id });
+                }
+                else
+                {
+                    //viewModel.Band.BandID = id;
+                    return RedirectToAction(nameof(Create), "BandArtist", new { id });
+                    //return View(viewModel);
+                }
+
+
                 //Artist a = _context.Artists.FirstOrDefault(x => x.FirstName == viewModel.)
-                _context.Add(viewModel.BandArtist);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Details), "Band", new { id });
+
                 //return RedirectToAction(nameof(Index));
             }
             return View(viewModel);

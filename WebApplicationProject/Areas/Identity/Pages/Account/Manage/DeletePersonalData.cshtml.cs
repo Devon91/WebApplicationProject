@@ -4,24 +4,31 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using WebApplicationProject.Areas.Identity.Data;
+using WebApplicationProject.Data;
+using WebApplicationProject.Models;
 
 namespace WebApplicationProject.Areas.Identity.Pages.Account.Manage
 {
     public class DeletePersonalDataModel : PageModel
     {
-        private readonly UserManager<IdentityUser> _userManager;
-        private readonly SignInManager<IdentityUser> _signInManager;
+        private readonly UserManager<CustomUser> _userManager;
+        private readonly SignInManager<CustomUser> _signInManager;
         private readonly ILogger<DeletePersonalDataModel> _logger;
+        private readonly WebApplicationProjectContext _context;
 
         public DeletePersonalDataModel(
-            UserManager<IdentityUser> userManager,
-            SignInManager<IdentityUser> signInManager,
-            ILogger<DeletePersonalDataModel> logger)
+            UserManager<CustomUser> userManager,
+            SignInManager<CustomUser> signInManager,
+            ILogger<DeletePersonalDataModel> logger,
+            WebApplicationProjectContext context)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _logger = logger;
+            _context = context;
         }
 
         [BindProperty]
@@ -65,6 +72,9 @@ namespace WebApplicationProject.Areas.Identity.Pages.Account.Manage
                     return Page();
                 }
             }
+            Gebruiker gebruiker = await _context.Gebruikers.FirstOrDefaultAsync(x => x.UserID == user.Id);
+            _context.Gebruikers.Remove(gebruiker);
+            await _context.SaveChangesAsync();
 
             var result = await _userManager.DeleteAsync(user);
             var userId = await _userManager.GetUserIdAsync(user);
