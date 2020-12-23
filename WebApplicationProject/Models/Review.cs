@@ -15,6 +15,6 @@ namespace WebApplicationProject.Models
         public Album Album { get; set; }
         [Required]
         public int ReviewRating { get; set; }
-        public User User { get; set; }
+        public Gebruiker Gebruiker { get; set; }
     }
 }

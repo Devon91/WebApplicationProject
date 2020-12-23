@@ -25,10 +25,22 @@
 @foreach (var item in Model) {
         <tr>
             <td>
+                @Html.DisplayFor(modelItem => item.Band.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Artist.FirstName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Artist.LastName)
+            </td>
+            <td>
                 @Html.DisplayFor(modelItem => item.JoinDate)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.LeaveDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Role.Name)
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.BandArtistID">Edit</a> |

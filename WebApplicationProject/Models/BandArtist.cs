@@ -10,8 +10,9 @@ namespace WebApplicationProject.Models
     {
         public int BandArtistID { get; set; }
         [Required]
+        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
         public DateTime JoinDate { get; set; }
-        public DateTime LeaveDate { get; set; }
+        public DateTime? LeaveDate { get; set; }
         public int ArtistID { get; set; }
         public int RoleID { get; set; }
         public int BandID { get; set; }

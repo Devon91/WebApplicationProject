@@ -12,6 +12,7 @@ namespace WebApplicationProject.ViewModels
     public class CreateAlbumViewModel
     {
         public Album Album { get; set; }
+        public Band Band { get; set; }
         public SelectList Genres { get; set; }
         public SelectList Bands { get; set; }
         [Display(Name = "Album Image")]

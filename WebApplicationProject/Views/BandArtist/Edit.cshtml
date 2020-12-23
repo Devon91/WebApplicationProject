@@ -1,4 +1,4 @@
-﻿@model WebApplicationProject.Models.BandArtist
+﻿@model WebApplicationProject.ViewModels.CreateBandArtistViewModel
 
 @{
     ViewData["Title"] = "Edit";
@@ -12,19 +12,44 @@
     <div class="col-md-4">
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="BandArtistID" />
+            <input type="hidden" asp-for="BandArtist.BandArtistID" />
             <div class="form-group">
-                <label asp-for="JoinDate" class="control-label"></label>
-                <input asp-for="JoinDate" class="form-control" />
-                <span asp-validation-for="JoinDate" class="text-danger"></span>
+                <label asp-for="BandArtist.JoinDate" class="control-label"></label>
+                <input asp-for="BandArtist.JoinDate" class="form-control" />
+                <span asp-validation-for="BandArtist.JoinDate" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="LeaveDate" class="control-label"></label>
-                <input asp-for="LeaveDate" class="form-control" />
-                <span asp-validation-for="LeaveDate" class="text-danger"></span>
+                <label asp-for="BandArtist.LeaveDate" class="control-label"></label>
+                <input asp-for="BandArtist.LeaveDate" class="form-control" />
+                <span asp-validation-for="BandArtist.LeaveDate" class="text-danger"></span>
             </div>
+            @*<div class="form-group">
+                <label asp-for="BandArtist.BandID" class="control-label">Band</label>
+                <select asp-for="BandArtist.BandID" class="form-control" asp-items="Model.Bands"></select>
+                <span asp-validation-for="BandArtist.BandID" class="text-danger"></span>
+            </div>*@
             <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
+                <label asp-for="BandArtist.RoleID" class="control-label">Role</label>
+                <select asp-for="BandArtist.RoleID" class="form-control" asp-items="Model.Roles"></select>
+                <span asp-validation-for="BandArtist.RoleID" class="text-danger"></span>
+            </div>
+            @*<div class="form-group">
+                <label asp-for="BandArtist.ArtistID" class="control-label">Artist</label>
+                <select asp-for="BandArtist.ArtistID" class="form-control" asp-items="Model.Artists"></select>
+                <span asp-validation-for="BandArtist.ArtistID" class="text-danger"></span>
+            </div>*@
+            @*<div class="form-group">
+                    <label asp-for="BandArtist.Artist.FirstName" class="control-label">First Name</label>
+                    <input asp-for="BandArtist.Artist.FirstName" class="form-control">
+                    <span asp-validation-for="BandArtist.Artist.FirstName" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="BandArtist.Artist.LastName" class="control-label">Last Name</label>
+                    <input asp-for="BandArtist.Artist.LastName" class="form-control">
+                    <span asp-validation-for="BandArtist.Artist.LastName" class="text-danger"></span>
+                </div>*@
+            <div class="form-group">
+                <input type="submit" value="Save" asp-route-id="@Model.BandArtist.BandArtistID" asp-route-artistID="@Model.BandArtist.ArtistID" asp-route-bandID="@Model.BandArtist.BandID" class="btn btn-primary" />
             </div>
         </form>
     </div>

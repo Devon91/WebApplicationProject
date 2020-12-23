@@ -3,30 +3,39 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using WebApplicationProject.Data;
 using WebApplicationProject.Models;
 
 namespace WebApplicationProject.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
+        private readonly WebApplicationProjectContext _context;
+        private readonly IWebHostEnvironment webHostEnvironment;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(WebApplicationProjectContext context, IWebHostEnvironment hostEnvironment)
         {
-            _logger = logger;
+            _context = context;
+            webHostEnvironment = hostEnvironment;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View();
+            var albums = await _context.Albums.Include(x => x.Band).Where(x => x.ReleaseDate > DateTime.Now)
+                .ToListAsync();
+            return View(albums);
         }
 
-        public IActionResult Privacy()
-        {
-            return View();
-        }
+        //public async Task<IActionResult> Latest()
+        //{
+        //    var albums = await _context.Albums.Include(x => x.Band).Where(x => x.ReleaseDate < DateTime.Now)
+        //        .ToListAsync();
+        //    return View(albums);
+        //}
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()

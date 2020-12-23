@@ -1,4 +1,4 @@
-﻿@model WebApplicationProject.Models.Review
+﻿@model WebApplicationProject.ViewModels.CreateReviewViewModel
 
 @{
     ViewData["Title"] = "Create";
@@ -13,17 +13,22 @@
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="Text" class="control-label"></label>
-                <input asp-for="Text" class="form-control" />
-                <span asp-validation-for="Text" class="text-danger"></span>
+                <label asp-for="Review.Text" class="control-label"></label>
+                <input asp-for="Review.Text" class="form-control" />
+                <span asp-validation-for="Review.Text" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="ReviewRating" class="control-label"></label>
-                <input asp-for="ReviewRating" class="form-control" />
-                <span asp-validation-for="ReviewRating" class="text-danger"></span>
+                <label asp-for="Review.ReviewRating" class="control-label"></label>
+                <input asp-for="Review.ReviewRating" class="form-control" />
+                <span asp-validation-for="Review.ReviewRating" class="text-danger"></span>
             </div>
+            @*<div class="form-group">
+                <label asp-for="Review.Album.AlbumID" class="control-label">Album</label>
+                <select asp-for="Review.Album.AlbumID" class="form-control" asp-items="Model.Albums"></select>
+                <span asp-validation-for="Review.Album.AlbumID" class="text-danger"></span>
+            </div>*@
             <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+                <input asp-action="Create" asp-route-id="@Model.Album.AlbumID" type="submit" value="Create" class="btn btn-primary" />
             </div>
         </form>
     </div>

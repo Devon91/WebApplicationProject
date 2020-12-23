@@ -6,13 +6,14 @@ using System.Threading.Tasks;
 
 namespace WebApplicationProject.Models
 {
-    public class Artist
+    public partial class Artist
     {
         public int ArtistID { get; set; }
         [Required]
         public string FirstName { get; set; }
         [Required]
         public string LastName { get; set; }
+        public string FullName { get; set; }
         public List<BandArtist> BandArtists { get; set; }
     }
 }

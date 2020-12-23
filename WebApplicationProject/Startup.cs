@@ -12,12 +12,12 @@ using WebApplicationProject.Data;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using WebApplicationProject.Areas.Identity.Data;
 using WebApplicationProject.Helpers;
 using WebApplicationProject.Data.UnitOfWork;
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
 using System.Globalization;
+using WebApplicationProject.Areas.Identity.Data;
 
 namespace WebApplicationProject
 {
@@ -44,6 +44,21 @@ namespace WebApplicationProject
             services.Configure<AppSettings>(Configuration.GetSection("AppSettings"));
 
             services.AddScoped<IUnitOfWork, UnitOfWork>();
+
+            //runtime compilation
+            services.AddRazorPages().AddRazorRuntimeCompilation();
+
+            services.Configure<IdentityOptions>(options =>
+            {
+                options.Password.RequireDigit = false;
+                options.Password.RequireLowercase = false;
+                options.Password.RequireUppercase = false;
+                options.Password.RequireNonAlphanumeric = false;
+                options.Password.RequiredLength = 6;
+
+                options.User.AllowedUserNameCharacters =
+                "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@._-";
+            });
 
             // configure jwt authentication
             var appSettings = Configuration.GetSection("AppSettings").Get<AppSettings>();
@@ -101,6 +116,7 @@ namespace WebApplicationProject
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+                app.UseBrowserLink();
             }
             else
             {
@@ -158,7 +174,7 @@ namespace WebApplicationProject
                 roleResult = await RoleManager.CreateAsync(new IdentityRole("Admin"));
             }
             // Assign Admin role to the main user.
-            IdentityUser user = Context.Users.FirstOrDefault(u => u.Email == "test@example.com");
+            IdentityUser user = Context.Users.FirstOrDefault(u => u.Email == "admin@test.com");
             if (user != null)
             {
                 DbSet<IdentityUserRole<string>> roles = Context.UserRoles;

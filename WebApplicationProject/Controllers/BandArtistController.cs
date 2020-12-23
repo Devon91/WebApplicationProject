@@ -23,7 +23,11 @@ namespace WebApplicationProject.Controllers
         // GET: BandArtist
         public async Task<IActionResult> Index()
         {
-            return View(await _context.BandArtists.ToListAsync());
+            return View(await _context.BandArtists
+                .Include(x => x.Band)
+                .Include(x => x.Artist)
+                .Include(x => x.Role)
+                .ToListAsync());
         }
 
         // GET: BandArtist/Details/5
@@ -45,10 +49,13 @@ namespace WebApplicationProject.Controllers
         }
 
         // GET: BandArtist/Create
-        public IActionResult Create()
+        public IActionResult Create(int id)
         {
             CreateBandArtistViewModel viewModel = new CreateBandArtistViewModel();
-            viewModel.Artists = new SelectList(_context.Artists, "ArtistID", "FirstName");
+            viewModel.Band = _context.Bands.FirstOrDefault(x => x.BandID == id);
+            //var fullName = _context.Artists.Select(x => new { V = x.FirstName = x.FirstName + " " + x.LastName})
+            //viewModel.FullName = _context.Artists.Select(x => x.FirstName) + _context.Artists.Select(x => x.LastName).ToList();
+            viewModel.Artists = new SelectList(_context.Artists, "ArtistID", "FullName");
             viewModel.Bands = new SelectList(_context.Bands, "BandID", "Name");
             viewModel.Roles = new SelectList(_context.ArtistRoles, "RoleID", "Name");
             return View(viewModel);
@@ -59,13 +66,24 @@ namespace WebApplicationProject.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(CreateBandArtistViewModel viewModel)
+        public async Task<IActionResult> Create(CreateBandArtistViewModel viewModel, int id)
         {
             if (ModelState.IsValid)
             {
+                int existsID = _context.Artists.FirstOrDefault(x => x.FirstName == viewModel.BandArtist.Artist.FirstName && x.LastName == viewModel.BandArtist.Artist.LastName).ArtistID;
+
+                if (existsID > 0)
+                {
+                    viewModel.BandArtist.Artist = _context.Artists.FirstOrDefault(x => x.ArtistID == existsID);
+                }
+
+                viewModel.BandArtist.BandID = id;
+
+                //Artist a = _context.Artists.FirstOrDefault(x => x.FirstName == viewModel.)
                 _context.Add(viewModel.BandArtist);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Details), "Band", new { id });
+                //return RedirectToAction(nameof(Index));
             }
             return View(viewModel);
         }
@@ -78,12 +96,20 @@ namespace WebApplicationProject.Controllers
                 return NotFound();
             }
 
-            var bandArtist = await _context.BandArtists.FindAsync(id);
-            if (bandArtist == null)
+            CreateBandArtistViewModel viewModel = new CreateBandArtistViewModel();
+            viewModel.BandArtist = await _context.BandArtists.FindAsync(id);
+            
+
+            if (viewModel.BandArtist == null)
             {
                 return NotFound();
             }
-            return View(bandArtist);
+
+            viewModel.Bands = new SelectList(_context.Bands, "BandID", "Name");
+            viewModel.Roles = new SelectList(_context.ArtistRoles, "RoleID", "Name", viewModel.BandArtist.RoleID);
+            viewModel.Artists = new SelectList(_context.Artists, "ArtistID", "FirstName", viewModel.BandArtist.ArtistID);
+
+            return View(viewModel);
         }
 
         // POST: BandArtist/Edit/5
@@ -91,23 +117,29 @@ namespace WebApplicationProject.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("BandArtistID,JoinDate,LeaveDate")] BandArtist bandArtist)
+        public async Task<IActionResult> Edit(int id, int artistID, int bandID, CreateBandArtistViewModel viewModel)
         {
-            if (id != bandArtist.BandArtistID)
+            //viewModel.BandArtist = _context.BandArtists
+            //    .SingleOrDefault(x => x.ArtistID == id);
+            if (id != viewModel.BandArtist.BandArtistID)
             {
                 return NotFound();
             }
+
+            viewModel.BandArtist.ArtistID = artistID;
+            viewModel.BandArtist.BandID = bandID;
 
             if (ModelState.IsValid)
             {
                 try
                 {
-                    _context.Update(bandArtist);
+                    //_context.Update(viewModel.BandArtist.Artist);
+                    _context.Update(viewModel.BandArtist);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!BandArtistExists(bandArtist.BandArtistID))
+                    if (!BandArtistExists(viewModel.BandArtist.BandArtistID))
                     {
                         return NotFound();
                     }
@@ -118,7 +150,7 @@ namespace WebApplicationProject.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(bandArtist);
+            return View(viewModel);
         }
 
         // GET: BandArtist/Delete/5

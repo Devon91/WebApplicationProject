@@ -1,4 +1,4 @@
-﻿@model WebApplicationProject.Models.Album
+﻿@model WebApplicationProject.ViewModels.CreateAlbumViewModel
 
 @{
     ViewData["Title"] = "Edit";
@@ -10,43 +10,56 @@
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Edit">
+        <form asp-action="Edit" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="AlbumID" />
+            <input type="hidden" asp-for="Album.AlbumID" />
             <div class="form-group">
-                <label asp-for="Title" class="control-label"></label>
-                <input asp-for="Title" class="form-control" />
-                <span asp-validation-for="Title" class="text-danger"></span>
+                <label asp-for="Album.Title" class="control-label"></label>
+                <input asp-for="Album.Title" class="form-control" />
+                <span asp-validation-for="Album.Title" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="CoverArt" class="control-label"></label>
-                <input asp-for="CoverArt" class="form-control" />
-                <span asp-validation-for="CoverArt" class="text-danger"></span>
+                <label asp-for="CoverArtImage" class="control-label"></label>
+                <div class="custom-file">
+                    <input asp-for="CoverArtImage" class="custom-file-input" id="customFile" />
+                    <label class="custom-file-label" for="customFile">Choose file</label>
+                </div>
+                <span asp-validation-for="CoverArtImage" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="ReleaseDate" class="control-label"></label>
-                <input asp-for="ReleaseDate" class="form-control" />
-                <span asp-validation-for="ReleaseDate" class="text-danger"></span>
+                <label asp-for="Album.ReleaseDate" class="control-label">Release Date</label>
+                <input asp-for="Album.ReleaseDate" class="form-control" />
+                <span asp-validation-for="Album.ReleaseDate" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="MusicLabel" class="control-label"></label>
-                <input asp-for="MusicLabel" class="form-control" />
-                <span asp-validation-for="MusicLabel" class="text-danger"></span>
+                <label asp-for="Album.MusicLabel" class="control-label">Label</label>
+                <input asp-for="Album.MusicLabel" class="form-control" />
+                <span asp-validation-for="Album.MusicLabel" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="CriticsRating" class="control-label"></label>
-                <input asp-for="CriticsRating" class="form-control" />
-                <span asp-validation-for="CriticsRating" class="text-danger"></span>
+                <label asp-for="Album.CriticsRating" class="control-label">Rating</label>
+                <input asp-for="Album.CriticsRating" class="form-control" />
+                <span asp-validation-for="Album.CriticsRating" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Producer" class="control-label"></label>
-                <input asp-for="Producer" class="form-control" />
-                <span asp-validation-for="Producer" class="text-danger"></span>
+                <label asp-for="Album.Producer" class="control-label"></label>
+                <input asp-for="Album.Producer" class="form-control" />
+                <span asp-validation-for="Album.Producer" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Award" class="control-label"></label>
-                <input asp-for="Award" class="form-control" />
-                <span asp-validation-for="Award" class="text-danger"></span>
+                <label asp-for="Album.Award" class="control-label"></label>
+                <input asp-for="Album.Award" class="form-control" />
+                <span asp-validation-for="Album.Award" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Album.BandID" class="control-label">Band</label>
+                <select asp-for="Album.BandID" class="form-control" asp-items="Model.Bands"></select>
+                <span asp-validation-for="Album.BandID" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Album.GenreID" class="control-label">Genre</label>
+                <select asp-for="Album.GenreID" class="form-control" asp-items="Model.Genres"></select>
+                <span asp-validation-for="Album.GenreID" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />
@@ -60,5 +73,13 @@
 </div>
 
 @section Scripts {
+    <script type="text/javascript">
+
+        // Add the following code if you want the name of the file appear on select
+        $(".custom-file-input").on("change", function () {
+            var fileName = $(this).val().split("\\").pop();
+            $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
+        });
+    </script>
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }

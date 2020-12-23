@@ -58,6 +58,7 @@ namespace WebApplicationProject.Controllers
         {
             if (ModelState.IsValid)
             {
+                artist.FullName = artist.FirstName + " " + artist.LastName;
                 _context.Add(artist);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));

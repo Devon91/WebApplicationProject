@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -18,7 +19,7 @@ namespace WebApplicationProject.Data
         public DbSet<Review> Reviews { get; set; }
         public DbSet<Album> Albums { get; set; }
         public DbSet<Song> Songs { get; set; }
-        public DbSet<User> AppUsers { get; set; }
+        public DbSet<Gebruiker> Gebruikers { get; set; }
         public DbSet<Genre> Genres { get; set; }
         public DbSet<Band> Bands { get; set; }
         public DbSet<BandArtist> BandArtists { get; set; }
@@ -34,7 +35,7 @@ namespace WebApplicationProject.Data
             modelBuilder.Entity<Review>().ToTable("Review");
             modelBuilder.Entity<Album>().ToTable("Album");
             modelBuilder.Entity<Song>().ToTable("Song");
-            modelBuilder.Entity<User>().ToTable("User");
+            modelBuilder.Entity<Gebruiker>().ToTable("User");
             modelBuilder.Entity<Genre>().ToTable("Genre");
             modelBuilder.Entity<Band>().ToTable("Band");
             modelBuilder.Entity<BandArtist>().ToTable("BandArtist");

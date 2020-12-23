@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace WebApplicationProject.Models
 {
-    public class Song
+    public partial class Song
     {
         public int SongID { get; set; }
         [Required]
@@ -14,6 +14,7 @@ namespace WebApplicationProject.Models
         [Required]
         public int TrackLength { get; set; }
         public Album Album { get; set; }
+        public int AlbumID { get; set; }
         [Required]
         public int TrackNumber { get; set; }
     }

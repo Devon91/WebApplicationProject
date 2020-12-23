@@ -22,7 +22,7 @@ namespace WebApplicationProject.Controllers
         // GET: User
         public async Task<IActionResult> Index()
         {
-            return View(await _context.AppUsers.ToListAsync());
+            return View(await _context.Gebruikers.ToListAsync());
         }
 
         // GET: User/Details/5
@@ -33,8 +33,8 @@ namespace WebApplicationProject.Controllers
                 return NotFound();
             }
 
-            var user = await _context.AppUsers
-                .FirstOrDefaultAsync(m => m.UserID == id);
+            var user = await _context.Gebruikers
+                .FirstOrDefaultAsync(m => m.GebruikerID == id);
             if (user == null)
             {
                 return NotFound();
@@ -54,15 +54,15 @@ namespace WebApplicationProject.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("UserID,UserName,Password,Email,PhoneNumber")] User user)
+        public async Task<IActionResult> Create([Bind("UserID,UserName,Password,Email,PhoneNumber")] Gebruiker gebruiker)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(user);
+                _context.Add(gebruiker);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(user);
+            return View(gebruiker);
         }
 
         // GET: User/Edit/5
@@ -73,7 +73,7 @@ namespace WebApplicationProject.Controllers
                 return NotFound();
             }
 
-            var user = await _context.AppUsers.FindAsync(id);
+            var user = await _context.Gebruikers.FindAsync(id);
             if (user == null)
             {
                 return NotFound();
@@ -86,9 +86,9 @@ namespace WebApplicationProject.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("UserID,UserName,Password,Email,PhoneNumber")] User user)
+        public async Task<IActionResult> Edit(int id, [Bind("UserID,UserName,Password,Email,PhoneNumber")] Gebruiker gebruiker)
         {
-            if (id != user.UserID)
+            if (id != gebruiker.GebruikerID)
             {
                 return NotFound();
             }
@@ -97,12 +97,12 @@ namespace WebApplicationProject.Controllers
             {
                 try
                 {
-                    _context.Update(user);
+                    _context.Update(gebruiker);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!UserExists(user.UserID))
+                    if (!UserExists(gebruiker.GebruikerID))
                     {
                         return NotFound();
                     }
@@ -113,7 +113,7 @@ namespace WebApplicationProject.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(user);
+            return View(gebruiker);
         }
 
         // GET: User/Delete/5
@@ -124,8 +124,8 @@ namespace WebApplicationProject.Controllers
                 return NotFound();
             }
 
-            var user = await _context.AppUsers
-                .FirstOrDefaultAsync(m => m.UserID == id);
+            var user = await _context.Gebruikers
+                .FirstOrDefaultAsync(m => m.GebruikerID == id);
             if (user == null)
             {
                 return NotFound();
@@ -139,15 +139,15 @@ namespace WebApplicationProject.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var user = await _context.AppUsers.FindAsync(id);
-            _context.AppUsers.Remove(user);
+            var user = await _context.Gebruikers.FindAsync(id);
+            _context.Gebruikers.Remove(user);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
         private bool UserExists(int id)
         {
-            return _context.AppUsers.Any(e => e.UserID == id);
+            return _context.Gebruikers.Any(e => e.GebruikerID == id);
         }
     }
 }

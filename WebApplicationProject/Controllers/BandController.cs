@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -21,27 +22,41 @@ namespace WebApplicationProject.Controllers
         }
 
         // GET: Band
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(DetailBandViewModel viewModel)
         {
-            return View(await _context.Bands.ToListAsync());
+            viewModel.Bands = await _context.Bands.OrderBy(x => x.Name).ToListAsync();
+
+            foreach (var item in viewModel.Bands)
+            {
+                item.Name = item.Name.ToUpper();
+            }
+
+            viewModel.BandArtists = await _context.BandArtists.Include(x => x.Artist).ToListAsync();
+            return View(viewModel);
         }
 
         // GET: Band/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public async Task<IActionResult> Details(int? id, DetailBandViewModel viewModel)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var band = await _context.Bands
+            viewModel.Band = await _context.Bands
+                .Include(x => x.Albums)
                 .FirstOrDefaultAsync(m => m.BandID == id);
-            if (band == null)
+
+            viewModel.BandArtists = _context.BandArtists.Where(x => x.BandID == viewModel.Band.BandID)
+                .Include(x => x.Artist)
+                .Include(x => x.Role);
+
+            if (viewModel.Band == null)
             {
                 return NotFound();
             }
 
-            return View(band);
+            return View(viewModel);
         }
 
         // GET: Band/Create
@@ -49,9 +64,9 @@ namespace WebApplicationProject.Controllers
         {
             CreateBandViewModel viewModel = new CreateBandViewModel();
             viewModel.Band = new Band();
-            viewModel.Artists = new SelectList(_context.Artists, "BandArtistID", "FirstName");
-            viewModel.Roles = new SelectList(_context.Roles, "RoleID", "Name");
-            return View();
+            //viewModel.Artists = new SelectList(_context.Artists, "ArtistID", "FirstName");
+            //viewModel.Roles = new SelectList(_context.Roles, "RoleID", "Name");
+            return View(viewModel);
         }
 
         // POST: Band/Create
@@ -59,15 +74,17 @@ namespace WebApplicationProject.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("BandID,Name,Background")] Band band)
+        public async Task<IActionResult> Create(CreateBandViewModel viewModel)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(band);
+                _context.Add(viewModel.Band);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                Band b = _context.Bands.FirstOrDefault(x => x.Name == viewModel.Band.Name);
+                return RedirectToAction(nameof(Details), "Band", new { id = b.BandID });
+                //return RedirectToAction(nameof(Index));
             }
-            return View(band);
+            return View(viewModel);
         }
 
         // GET: Band/Edit/5
@@ -122,6 +139,7 @@ namespace WebApplicationProject.Controllers
         }
 
         // GET: Band/Delete/5
+        [Authorize]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -142,6 +160,7 @@ namespace WebApplicationProject.Controllers
         // POST: Band/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var band = await _context.Bands.FindAsync(id);

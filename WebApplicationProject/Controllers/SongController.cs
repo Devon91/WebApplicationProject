@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using WebApplicationProject.Data;
 using WebApplicationProject.Models;
+using WebApplicationProject.ViewModels;
 
 namespace WebApplicationProject.Controllers
 {
@@ -44,9 +45,12 @@ namespace WebApplicationProject.Controllers
         }
 
         // GET: Song/Create
-        public IActionResult Create()
+        public IActionResult Create(int id)
         {
-            return View();
+            CreateSongViewModel viewModel = new CreateSongViewModel();
+            viewModel.Song = new Song();
+            viewModel.AlbumID = id;//new SelectList(_context.Albums, "AlbumID", "Title", id);
+            return View(viewModel);
         }
 
         // POST: Song/Create
@@ -54,15 +58,22 @@ namespace WebApplicationProject.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("SongID,Title,TrackLength,TrackNumber")] Song song)
+        public async Task<IActionResult> Create(CreateSongViewModel viewModel, int id)
         {
+            viewModel.Song.Album = _context.Albums.FirstOrDefault(x => x.AlbumID == id);
+            Album album = viewModel.Song.Album;//_context.Albums.Include(x => x.Songs).FirstOrDefault(x => x.AlbumID == viewModel.Song.AlbumID);
+
             if (ModelState.IsValid)
             {
-                _context.Add(song);
+
+                _context.Add(viewModel.Song);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Details), "Album", new { id });
+                //return RedirectToAction(nameof(Index));
+
             }
-            return View(song);
+            viewModel.Albums = new SelectList(_context.Albums, "AlbumID", "Title", viewModel.Song.AlbumID);
+            return View(viewModel);
         }
 
         // GET: Song/Edit/5
@@ -73,12 +84,16 @@ namespace WebApplicationProject.Controllers
                 return NotFound();
             }
 
-            var song = await _context.Songs.FindAsync(id);
-            if (song == null)
+            CreateSongViewModel viewModel = new CreateSongViewModel();
+            viewModel.Song = await _context.Songs.FindAsync(id);
+
+            if (viewModel.Song == null)
             {
                 return NotFound();
             }
-            return View(song);
+            viewModel.Albums = new SelectList(_context.Albums, "AlbumID", "Title", viewModel.Song.AlbumID);
+
+            return View(viewModel);
         }
 
         // POST: Song/Edit/5
@@ -86,9 +101,9 @@ namespace WebApplicationProject.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("SongID,Title,TrackLength,TrackNumber")] Song song)
+        public async Task<IActionResult> Edit(int id, CreateSongViewModel viewModel)
         {
-            if (id != song.SongID)
+            if (id != viewModel.Song.SongID)
             {
                 return NotFound();
             }
@@ -97,12 +112,12 @@ namespace WebApplicationProject.Controllers
             {
                 try
                 {
-                    _context.Update(song);
+                    _context.Update(viewModel.Song);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!SongExists(song.SongID))
+                    if (!SongExists(viewModel.Song.SongID))
                     {
                         return NotFound();
                     }
@@ -111,9 +126,10 @@ namespace WebApplicationProject.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Details), "Album", new { id = viewModel.Song.AlbumID });
+                //return RedirectToAction(nameof(Index));
             }
-            return View(song);
+            return View(viewModel);
         }
 
         // GET: Song/Delete/5

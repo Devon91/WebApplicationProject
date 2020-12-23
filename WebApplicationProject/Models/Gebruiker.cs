@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
+using WebApplicationProject.Areas.Identity.Data;
 
 namespace WebApplicationProject.Models
 {
-    public class User
+    public class Gebruiker
     {
-        public int UserID { get; set; }
+        public int GebruikerID { get; set; }
         [Required]
         public string UserName { get; set; }
         [Required]
@@ -18,5 +19,7 @@ namespace WebApplicationProject.Models
         [Required]
         public string PhoneNumber { get; set; }
         public List<Review> Reviews { get; set; }
+        public string UserID { get; set; }
+        public CustomUser CustomUser { get; set; }
     }
 }

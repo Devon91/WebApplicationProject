@@ -11,7 +11,7 @@ namespace WebApplicationProject.ViewModels
     {
         public Band Band { get; set; }
         public BandArtist BandArtist { get; set; }
-        public SelectList Artists { get; set; }
-        public SelectList Roles { get; set; }
+        //public SelectList Artists { get; set; }
+        //public SelectList Roles { get; set; }
     }
 }

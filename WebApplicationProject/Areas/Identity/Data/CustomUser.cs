@@ -3,12 +3,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using WebApplicationProject.Models;
 
 namespace WebApplicationProject.Areas.Identity.Data
 {
     public class CustomUser : IdentityUser
     {
         [PersonalData]
-        public string Naam { get; set; }
+        public Gebruiker Gebruiker { get; set; }
     }
 }

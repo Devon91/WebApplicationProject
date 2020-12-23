@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using WebApplicationProject.Data;
 using WebApplicationProject.Models;
+using WebApplicationProject.ViewModels;
 
 namespace WebApplicationProject.Controllers
 {
@@ -22,7 +23,9 @@ namespace WebApplicationProject.Controllers
         // GET: Review
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Reviews.ToListAsync());
+            return View(await _context.Reviews
+                .Include(x => x.Album)
+                .ToListAsync());
         }
 
         // GET: Review/Details/5
@@ -44,9 +47,15 @@ namespace WebApplicationProject.Controllers
         }
 
         // GET: Review/Create
-        public IActionResult Create()
+        public IActionResult Create(int id)
         {
-            return View();
+            CreateReviewViewModel viewModel = new CreateReviewViewModel();
+            viewModel.Review = new Review();
+            viewModel.Album = _context.Albums.FirstOrDefault(x => x.AlbumID == id);
+            //viewModel.Review.Album = _context.Albums.FirstOrDefault(x => x.AlbumID == id);
+            //viewModel.Review.Album.AlbumID = id;
+            //viewModel.Albums = new SelectList(_context.Albums, "AlbumID", "Title");
+            return View(viewModel);
         }
 
         // POST: Review/Create
@@ -54,31 +63,47 @@ namespace WebApplicationProject.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ReviewID,Text,ReviewRating")] Review review)
+        public async Task<IActionResult> Create(CreateReviewViewModel viewModel, int id)
         {
+            viewModel.Review.Album = _context.Albums.FirstOrDefault(x => x.AlbumID == id);
+
             if (ModelState.IsValid)
             {
-                _context.Add(review);
+                viewModel.UserName = User.Identity.Name;
+                _context.Add(viewModel.Review);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Details), "Album", new { id });
+                //return RedirectToAction(nameof(Index));
             }
-            return View(review);
+            else
+            {
+                var errors = ModelState.Select(x => x.Value.Errors)
+                                       .Where(y => y.Count > 0)
+                                       .ToList();
+            }
+            //viewModel.Albums = new SelectList(_context.Albums, "AlbumID", "Title", viewModel.Review.Album.AlbumID);
+            return View(viewModel);
         }
 
         // GET: Review/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        public async Task<IActionResult> Edit(int? id, int albumID)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var review = await _context.Reviews.FindAsync(id);
-            if (review == null)
+            CreateReviewViewModel viewModel = new CreateReviewViewModel();
+
+            viewModel.Review = await _context.Reviews.FindAsync(id);
+            viewModel.Album = await _context.Albums.FindAsync(albumID);
+
+            if (viewModel.Review == null)
             {
                 return NotFound();
             }
-            return View(review);
+
+            return View(viewModel);
         }
 
         // POST: Review/Edit/5
@@ -86,9 +111,9 @@ namespace WebApplicationProject.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ReviewID,Text,ReviewRating")] Review review)
+        public async Task<IActionResult> Edit(int id, int albumID, CreateReviewViewModel viewModel)
         {
-            if (id != review.ReviewID)
+            if (id != viewModel.Review.ReviewID)
             {
                 return NotFound();
             }
@@ -97,12 +122,12 @@ namespace WebApplicationProject.Controllers
             {
                 try
                 {
-                    _context.Update(review);
+                    _context.Update(viewModel.Review);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!ReviewExists(review.ReviewID))
+                    if (!ReviewExists(viewModel.Review.ReviewID))
                     {
                         return NotFound();
                     }
@@ -111,9 +136,10 @@ namespace WebApplicationProject.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Details), "Album", new { id = albumID });
+                //return RedirectToAction(nameof(Index));
             }
-            return View(review);
+            return View(viewModel.Review);
         }
 
         // GET: Review/Delete/5

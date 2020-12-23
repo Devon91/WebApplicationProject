@@ -180,9 +180,6 @@ namespace WebApplicationProject.Migrations
                     b.Property<DateTimeOffset?>("LockoutEnd")
                         .HasColumnType("datetimeoffset");
 
-                    b.Property<string>("Naam")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("NormalizedEmail")
                         .HasColumnType("nvarchar(256)")
                         .HasMaxLength(256);
@@ -206,6 +203,9 @@ namespace WebApplicationProject.Migrations
                     b.Property<bool>("TwoFactorEnabled")
                         .HasColumnType("bit");
 
+                    b.Property<int?>("UserID")
+                        .HasColumnType("int");
+
                     b.Property<string>("UserName")
                         .HasColumnType("nvarchar(256)")
                         .HasMaxLength(256);
@@ -219,6 +219,8 @@ namespace WebApplicationProject.Migrations
                         .IsUnique()
                         .HasName("UserNameIndex")
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
+
+                    b.HasIndex("UserID");
 
                     b.ToTable("AspNetUsers");
                 });
@@ -239,14 +241,13 @@ namespace WebApplicationProject.Migrations
                     b.Property<string>("CoverArt")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("CriticsRating")
+                    b.Property<int?>("CriticsRating")
                         .HasColumnType("int");
 
                     b.Property<int>("GenreID")
                         .HasColumnType("int");
 
                     b.Property<string>("MusicLabel")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Producer")
@@ -277,6 +278,9 @@ namespace WebApplicationProject.Migrations
 
                     b.Property<string>("FirstName")
                         .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FullName")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("LastName")
@@ -323,7 +327,7 @@ namespace WebApplicationProject.Migrations
                     b.Property<DateTime>("JoinDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime>("LeaveDate")
+                    b.Property<DateTime?>("LeaveDate")
                         .HasColumnType("datetime2");
 
                     b.Property<int>("RoleID")
@@ -408,7 +412,7 @@ namespace WebApplicationProject.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int?>("AlbumID")
+                    b.Property<int>("AlbumID")
                         .HasColumnType("int");
 
                     b.Property<string>("Title")
@@ -507,6 +511,13 @@ namespace WebApplicationProject.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("WebApplicationProject.Areas.Identity.Data.CustomUser", b =>
+                {
+                    b.HasOne("WebApplicationProject.Models.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserID");
+                });
+
             modelBuilder.Entity("WebApplicationProject.Models.Album", b =>
                 {
                     b.HasOne("WebApplicationProject.Models.Band", "Band")
@@ -558,7 +569,9 @@ namespace WebApplicationProject.Migrations
                 {
                     b.HasOne("WebApplicationProject.Models.Album", "Album")
                         .WithMany("Songs")
-                        .HasForeignKey("AlbumID");
+                        .HasForeignKey("AlbumID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

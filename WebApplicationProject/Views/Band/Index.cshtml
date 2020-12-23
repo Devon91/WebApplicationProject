@@ -1,15 +1,16 @@
-﻿@model IEnumerable<WebApplicationProject.Models.Band>
+﻿@model WebApplicationProject.ViewModels.DetailBandViewModel
 
 @{
     ViewData["Title"] = "Index";
+    var itemCount = 0;
 }
 
-<h1>Index</h1>
+@*<h1>Index</h1>*@
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Create">Add Band</a>
 </p>
-<table class="table">
+@*<table class="table">
     <thead>
         <tr>
             <th>
@@ -21,21 +22,39 @@
             <th></th>
         </tr>
     </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Background)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.BandID">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.BandID">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.BandID">Delete</a>
-            </td>
-        </tr>
+    <tbody>*@
+
+@*<div class="row">
+    <div class="col-10"></div>
+    <div class="col-2 text-center">
+        <a asp-action="Create">Add Band</a>
+    </div>
+
+</div>*@
+
+@foreach (var band in Model.Bands)
+{
+    var insertRow = itemCount % 3 == 0;
+
+    if (insertRow)
+    {
+        @Html.Raw("<div class='row'>")
+    }
+
+    <div class="col-4 mb-5 mt-5">
+        <a style="color: black" asp-action="Details" asp-route-id="@band.BandID"><h1 class="text-center">@Html.DisplayFor(modelItem => band.Name)</h1></a>
+    </div>
+
+    itemCount++;
+
+    insertRow = itemCount % 3 == 0;
+
+    if (insertRow)
+    {
+        @Html.Raw("</div>")
+    }
+
 }
-    </tbody>
-</table>
+
+
+
