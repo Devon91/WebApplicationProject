@@ -86,7 +86,6 @@ namespace WebApplicationProject.Controllers.api
         [HttpPost]
         public async Task<ActionResult<Album>> PostAlbum(Album album)
         {
-            //album.Band = await _uow.BandRepository.GetById(2);
             album.Band = await _uow.BandRepository.GetById(album.BandID);
             album.Band.BandArtists = await _uow.BandArtistRepository.GetAll().Where(x => x.BandID == album.BandID).ToListAsync();
             album.Genre = await _uow.GenreRepository.GetById(album.GenreID);
