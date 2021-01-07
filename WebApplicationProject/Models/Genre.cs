@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace WebApplicationProject.Models
 {
-    public class Genre
+    public partial class Genre
     {
         public int GenreID { get; set; }
         [Required]

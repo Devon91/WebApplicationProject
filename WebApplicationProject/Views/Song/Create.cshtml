@@ -6,7 +6,7 @@
 
 <h1>Create</h1>
 
-<h4>Song</h4>
+<h2>Song</h2>
 <hr />
 <div class="row">
     <div class="col-md-4">
@@ -24,7 +24,7 @@
             </div>*@
             <div class="form-group">
                 <label asp-for="Song.TrackNumber" class="control-label"></label>
-                <input asp-for="Song.TrackNumber" class="form-control" />
+                <input asp-for="Song.TrackNumber" type="number" min="1" max="30" value="1" class="form-control" />
                 <span asp-validation-for="Song.TrackNumber" class="text-danger"></span>
             </div>
             @*<div class="form-group">
@@ -32,15 +32,13 @@
                 <select asp-for="Song.AlbumID" class="form-control" asp-items="Model.Albums"></select>
                 <span asp-validation-for="Song.AlbumID" class="text-danger"></span>
             </div>*@
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
+        <div class="form-group">
+            @*<input type="submit" value="Create" class="btn btn-primary" />*@
+            <input asp-action="Create" asp-route-id="@Model.AlbumID" type="submit" value="Create" class="btn btn-dark" />
+            <a class="btn btn-dark" asp-action="Details" asp-controller="Album" asp-route-id="@Model.AlbumID">Back to Album</a>
+        </div>
         </form>
     </div>
-</div>
-
-<div>
-    <a asp-action="Index">Back to List</a>
 </div>
 
 @section Scripts {

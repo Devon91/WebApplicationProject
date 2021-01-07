@@ -15,6 +15,7 @@ namespace WebApplicationProject.Models
         public Album Album { get; set; }
         public int AlbumID { get; set; }
         [Required]
+        [Range(1, 30, ErrorMessage = "The field {0} must be greater than {1} and lesser than {2}.")]
         public int TrackNumber { get; set; }
     }
 }

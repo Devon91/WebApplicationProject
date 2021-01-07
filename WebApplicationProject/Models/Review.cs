@@ -14,6 +14,7 @@ namespace WebApplicationProject.Models
         public string Text { get; set; }
         public Album Album { get; set; }
         [Required]
+        [Range(0, 10, ErrorMessage = "value between 0 and 10")]
         public int ReviewRating { get; set; }
         public Gebruiker Gebruiker { get; set; }
     }

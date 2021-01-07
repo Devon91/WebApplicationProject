@@ -40,7 +40,9 @@ namespace WebApplicationProject.Data
             modelBuilder.Entity<CustomUser>()
                 .HasOne(g => g.Gebruiker)
                 .WithOne(c => c.CustomUser)
-                .HasForeignKey<Gebruiker>(g => g.UserID);
+                .HasForeignKey<Gebruiker>(g => g.UserID)
+                //delete cascade
+                .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<Genre>().ToTable("Genre");
             modelBuilder.Entity<Band>().ToTable("Band");

@@ -25,23 +25,23 @@
         </div>*@
     <div class="row">
         <div class="col-12">
-            <h3 class="m-3 text-center"><u>Background</u></h3>
+            <h2 class="m-3 text-center"><u>Background</u></h2>
             <p class="text-center">@Html.DisplayFor(model => model.Band.Background)</p>
         </div>
     </div>
     <div class="row">
-        <div class="col-4 text-center">
+        <div class="col-md-4 text-center">
             <h3 class="m-3"><u>Band Members</u></h3>
             @foreach (var item in Model.BandArtists)
             {
                 <div class="row">
-                    <div class="col-4">
+                    <div class="col-md-4">
                         <p>@Html.DisplayFor(model => item.Role.Name):</p>
                     </div>
-                    <div class="col-6">
+                    <div class="col-md-6">
                         <p>@Html.DisplayFor(model => item.Artist.FirstName) @Html.DisplayFor(model => item.Artist.LastName)</p>
                     </div>
-                    <div class="col-2">
+                    <div class="col-md-2">
                         @if (this.User.Identity.IsAuthenticated)
                         {
                             <p><a asp-action="Edit" asp-route-id="@item.BandArtistID" asp-controller="BandArtist">Edit</a></p>
@@ -49,30 +49,30 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-4">
+                    <div class="col-md-4">
                         <p>Join Date:</p>
                     </div>
-                    <div class="col-6">
+                    <div class="col-md-6">
                         <p>@Html.DisplayFor(model => item.JoinDate)</p>
                     </div>
-                    <div class="col-2">
+                    <div class="col-md-2">
                         @if (User.IsInRole("Admin"))
                         {
-                            <p><a asp-action="Delete" asp-route-id="@item.BandArtistID" asp-controller="BandArtist"> Delete </a></p>
+                            <p><a asp-action="Delete" asp-route-id="@item.BandArtistID" asp-route-bandID="@item.BandID" asp-controller="BandArtist"> Delete </a></p>
                         }
                     </div>
                 </div>
                 <hr />
             }
         </div>
-        <div class="col-4 text-center">
+        <div class="col-md-4 text-center">
             <h3 class="m-3"><u>Albums</u></h3>
             @foreach (var item in Model.Band.Albums)
             {
                 <p><a style="color: black" asp-action="Details" asp-route-id="@item.AlbumID" asp-controller="Album">@Html.DisplayFor(model => item.Title)</a></p>
             }
         </div>
-        <div class="col-4 text-center">
+        <div class="col-md-4 text-center">
             <h3 class="m-3"><u>Awards</u></h3>
             @foreach (var item in Model.Band.Albums)
             {
@@ -81,26 +81,26 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-2"></div>
-        <div class="col-8 form-group text-center">
-            <input class="btn btn-primary" type="button" value="Back" onclick="location.href='@Url.Action("Index", "Band")'" />
+        <div class="col-md-2"></div>
+        <div class="col-md-8 form-group text-center">
+            <input class="btn btn-dark" type="button" value="Back" onclick="location.href='@Url.Action("Index", "Band")'" />
             @if (this.User.Identity.IsAuthenticated)
             {
-                <input class="btn btn-primary" type="button" value="Add Member" onclick="location.href='@Url.Action("Create", "BandArtist", new { id = Model.Band.BandID })'" />
+                <input class="btn btn-dark" type="button" value="Add Member" onclick="location.href='@Url.Action("Create", "BandArtist", new { id = Model.Band.BandID })'" />
             }
             @if (this.User.Identity.IsAuthenticated)
             {
-                <input class="btn btn-primary" type="button" value="Add Album" onclick="location.href='@Url.Action("Create", "Album", new { id = Model.Band.BandID })'" />
+                <input class="btn btn-dark" type="button" value="Add Album" onclick="location.href='@Url.Action("Create", "Album", new { id = Model.Band.BandID })'" />
             }
             @if (this.User.Identity.IsAuthenticated)
             {
-                <input class="btn btn-primary" type="button" value="Edit Band" onclick="location.href='@Url.Action("Edit", "Band", new { id = Model.Band.BandID })'" />
+                <input class="btn btn-dark" type="button" value="Edit Band" onclick="location.href='@Url.Action("Edit", "Band", new { id = Model.Band.BandID })'" />
             }
             @if (User.IsInRole("Admin"))
             {
-                <input class="btn btn-danger" type="button" value="Delete Band" onclick="location.href='@Url.Action("Delete", "Band", new { id = Model.Band.BandID })'" />
+                <input class="btn btn-dark" type="button" value="Delete Band" onclick="location.href='@Url.Action("Delete", "Band", new { id = Model.Band.BandID })'" />
             }
         </div>
-        <div class="col-2"></div>
+        <div class="col-md-2"></div>
     </div>
 </div>
