@@ -12,5 +12,6 @@ namespace WebApplicationProject.ViewModels
         public Song Song { get; set; }
         public int AlbumID { get; set; }
         public SelectList Albums { get; set; }
+        public Album Album { get; set; }
     }
 }

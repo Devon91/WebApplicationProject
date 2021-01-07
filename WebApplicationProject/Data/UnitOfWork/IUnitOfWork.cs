@@ -10,6 +10,17 @@ namespace WebApplicationProject.Data.UnitOfWork
     public interface IUnitOfWork
     {
         IGenericRepository<Album> AlbumRepository { get; }
+        IGenericRepository<Artist> ArtistRepository { get; }
+        IGenericRepository<Band> BandRepository { get; }
+        IGenericRepository<BandArtist> BandArtistRepository { get; }
+        IGenericRepository<Gebruiker> GebruikerRepository { get; }
+        IGenericRepository<Genre> GenreRepository { get; }
+        IGenericRepository<Review> ReviewRepository { get; }
+        IGenericRepository<Role> RoleRepository { get; }
+        IGenericRepository<Song> SongRepository { get; }
+
+
+
         Task Save();
     }
 }

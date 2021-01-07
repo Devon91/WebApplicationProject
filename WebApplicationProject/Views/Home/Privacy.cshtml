@@ -5,7 +5,7 @@
 
     <p>Use this page to detail your site's privacy policy.</p>*@
 
-@model IEnumerable<WebApplicationProject.Models.Album>
+@*@model IEnumerable<WebApplicationProject.Models.Album>
 
 @{
     ViewData["Title"] = "Index";
@@ -24,8 +24,7 @@
             @Html.Raw("<div class='row'>")
         }
 
-        @*<div class="row">*@
-        <div class="col-4">
+        <div class="col-md-4">
             <h1 class="text-center">@Html.DisplayFor(model => item.Band.Name)</h1>
             <h2 class="text-center">@Html.DisplayFor(model => item.Title)</h2>
             <div class="text-center">
@@ -53,4 +52,4 @@
             @Html.Raw("</div>")
         }
     }
-</div>
+</div>*@

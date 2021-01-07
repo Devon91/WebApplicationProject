@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace WebApplicationProject.Models
 {
-    public class Role
+    public partial class Role
     {
         public int RoleID { get; set; }
         [Required]

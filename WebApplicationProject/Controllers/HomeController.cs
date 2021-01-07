@@ -30,13 +30,6 @@ namespace WebApplicationProject.Controllers
             return View(albums);
         }
 
-        //public async Task<IActionResult> Latest()
-        //{
-        //    var albums = await _context.Albums.Include(x => x.Band).Where(x => x.ReleaseDate < DateTime.Now)
-        //        .ToListAsync();
-        //    return View(albums);
-        //}
-
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {

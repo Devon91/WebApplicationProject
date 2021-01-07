@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -47,6 +48,7 @@ namespace WebApplicationProject.Controllers
         }
 
         // GET: Review/Create
+        [Authorize]
         public IActionResult Create(int id)
         {
             CreateReviewViewModel viewModel = new CreateReviewViewModel();
@@ -63,6 +65,7 @@ namespace WebApplicationProject.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public async Task<IActionResult> Create(CreateReviewViewModel viewModel, int id)
         {
             viewModel.Review.Album = _context.Albums.FirstOrDefault(x => x.AlbumID == id);
@@ -77,15 +80,16 @@ namespace WebApplicationProject.Controllers
             }
             else
             {
-                var errors = ModelState.Select(x => x.Value.Errors)
-                                       .Where(y => y.Count > 0)
-                                       .ToList();
+                //var errors = ModelState.Select(x => x.Value.Errors)
+                //                       .Where(y => y.Count > 0)
+                //                       .ToList();
             }
             //viewModel.Albums = new SelectList(_context.Albums, "AlbumID", "Title", viewModel.Review.Album.AlbumID);
             return View(viewModel);
         }
 
         // GET: Review/Edit/5
+        [Authorize]
         public async Task<IActionResult> Edit(int? id, int albumID)
         {
             if (id == null)
@@ -111,6 +115,7 @@ namespace WebApplicationProject.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public async Task<IActionResult> Edit(int id, int albumID, CreateReviewViewModel viewModel)
         {
             if (id != viewModel.Review.ReviewID)
@@ -143,33 +148,40 @@ namespace WebApplicationProject.Controllers
         }
 
         // GET: Review/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        [Authorize]
+        public async Task<IActionResult> Delete(int? id, int albumID, string userName)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var review = await _context.Reviews
+            var review = await _context.Reviews.Include(x => x.Gebruiker)
                 .FirstOrDefaultAsync(m => m.ReviewID == id);
+
             if (review == null)
             {
                 return NotFound();
             }
-
-            return View(review);
+            if (User.Identity.Name == review.Gebruiker.Email)
+            {
+                _context.Reviews.Remove(review);
+                await _context.SaveChangesAsync();
+            }
+            return RedirectToAction(nameof(Details), "Album", new { id = albumID });
         }
 
-        // POST: Review/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            var review = await _context.Reviews.FindAsync(id);
-            _context.Reviews.Remove(review);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-        }
+        //// POST: Review/Delete/5
+        //[HttpPost, ActionName("Delete")]
+        //[ValidateAntiForgeryToken]
+        //[Authorize]
+        //public async Task<IActionResult> DeleteConfirmed(int id, int albumID)
+        //{
+        //    var review = await _context.Reviews.FindAsync(id);
+        //    _context.Reviews.Remove(review);
+        //    await _context.SaveChangesAsync();
+        //    return RedirectToAction(nameof(Details), "Album", new { id = albumID });
+        //}
 
         private bool ReviewExists(int id)
         {

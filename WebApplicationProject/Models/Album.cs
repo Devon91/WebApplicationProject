@@ -17,12 +17,6 @@ namespace WebApplicationProject.Models
         public int GenreID { get; set; }
         public Genre Genre { get; set; }
 
-        ////test
-        //[NotMapped]
-        //[DisplayName("Upload File")]
-        //public IFormFile ImageFile { get; set; }
-        ////end test
-
         public string CoverArt { get; set; }
         public int BandID { get; set; }
 

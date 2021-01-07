@@ -75,13 +75,14 @@ namespace WebApplicationProject.Controllers
         }
 
         // GET: Band/Create
+        [Authorize]
         public IActionResult Create()
         {
-            CreateBandViewModel viewModel = new CreateBandViewModel();
-            viewModel.Band = new Band();
+            //CreateBandViewModel viewModel = new CreateBandViewModel();
+            //viewModel.Band = new Band();
             //viewModel.Artists = new SelectList(_context.Artists, "ArtistID", "FirstName");
             //viewModel.Roles = new SelectList(_context.Roles, "RoleID", "Name");
-            return View(viewModel);
+            return View();
         }
 
         // POST: Band/Create
@@ -89,25 +90,34 @@ namespace WebApplicationProject.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(CreateBandViewModel viewModel)
+        [Authorize]
+        public async Task<IActionResult> Create(Band band)
         {
             if (ModelState.IsValid)
             {
                 List<Band> bands = _context.Bands.ToList();
 
-                if (!bands.Contains(viewModel.Band))
+                if (!bands.Contains(band))
                 {
-                    _context.Add(viewModel.Band);
+                    _context.Add(band);
                     await _context.SaveChangesAsync();
-                    Band b = _context.Bands.FirstOrDefault(x => x.Name == viewModel.Band.Name);
+
+                    Band b = _context.Bands.FirstOrDefault(x => x.Name == band.Name);
+
                     return RedirectToAction(nameof(Details), "Band", new { id = b.BandID });
+                }
+                else
+                {
+                    ModelState.AddModelError(nameof(band.Name),
+                    $"This {nameof(band.Name)} already exists.");
                 }
                 //return RedirectToAction(nameof(Index));
             }
-            return View(viewModel);
+            return View(band);
         }
 
         // GET: Band/Edit/5
+        [Authorize]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -128,6 +138,7 @@ namespace WebApplicationProject.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public async Task<IActionResult> Edit(int id, [Bind("BandID,Name,Background")] Band band)
         {
             if (id != band.BandID)
@@ -139,8 +150,22 @@ namespace WebApplicationProject.Controllers
             {
                 try
                 {
-                    _context.Update(band);
-                    await _context.SaveChangesAsync();
+                    List<Band> bands = _context.Bands.AsNoTracking().ToList();
+
+                    if (!bands.Contains(band))
+                    {
+                        _context.Update(band);
+                        await _context.SaveChangesAsync();
+
+                        return RedirectToAction(nameof(Details), "Band", new { id });
+                    }
+                    else
+                    {
+                        ModelState.AddModelError(nameof(band.Name),
+                        $"This {nameof(band.Name)} already exists.");
+
+                        return View(band);
+                    }
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -153,7 +178,6 @@ namespace WebApplicationProject.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Details), "Band", new { id });
                 //return RedirectToAction(nameof(Index));
             }
             return View(band);

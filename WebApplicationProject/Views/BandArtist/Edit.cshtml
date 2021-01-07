@@ -6,7 +6,7 @@
 
 <h1>Edit</h1>
 
-<h4>BandArtist</h4>
+<h2>BandArtist</h2>
 <hr />
 <div class="row">
     <div class="col-md-4">
@@ -23,40 +23,17 @@
                 <input asp-for="BandArtist.LeaveDate" type="date" class="form-control" />
                 <span asp-validation-for="BandArtist.LeaveDate" class="text-danger"></span>
             </div>
-            @*<div class="form-group">
-                <label asp-for="BandArtist.BandID" class="control-label">Band</label>
-                <select asp-for="BandArtist.BandID" class="form-control" asp-items="Model.Bands"></select>
-                <span asp-validation-for="BandArtist.BandID" class="text-danger"></span>
-            </div>*@
             <div class="form-group">
                 <label asp-for="BandArtist.RoleID" class="control-label">Role</label>
                 <select asp-for="BandArtist.RoleID" class="form-control" asp-items="Model.Roles"></select>
                 <span asp-validation-for="BandArtist.RoleID" class="text-danger"></span>
             </div>
-            @*<div class="form-group">
-                <label asp-for="BandArtist.ArtistID" class="control-label">Artist</label>
-                <select asp-for="BandArtist.ArtistID" class="form-control" asp-items="Model.Artists"></select>
-                <span asp-validation-for="BandArtist.ArtistID" class="text-danger"></span>
-            </div>*@
-            @*<div class="form-group">
-                    <label asp-for="BandArtist.Artist.FirstName" class="control-label">First Name</label>
-                    <input asp-for="BandArtist.Artist.FirstName" class="form-control">
-                    <span asp-validation-for="BandArtist.Artist.FirstName" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="BandArtist.Artist.LastName" class="control-label">Last Name</label>
-                    <input asp-for="BandArtist.Artist.LastName" class="form-control">
-                    <span asp-validation-for="BandArtist.Artist.LastName" class="text-danger"></span>
-                </div>*@
-            <div class="form-group">
-                <input type="submit" value="Save" asp-route-id="@Model.BandArtist.BandArtistID" asp-route-artistID="@Model.BandArtist.ArtistID" asp-route-bandID="@Model.BandArtist.BandID" class="btn btn-primary" />
-            </div>
+        <div class="form-group">
+            <input type="submit" value="Save" asp-route-id="@Model.BandArtist.BandArtistID" asp-route-artistID="@Model.BandArtist.ArtistID" asp-route-bandID="@Model.BandArtist.BandID" class="btn btn-dark" />
+            <a class="btn btn-dark" asp-action="Details" asp-controller="Band" asp-route-id="@Model.BandArtist.BandID">Back to Band</a>
+        </div>
         </form>
     </div>
-</div>
-
-<div>
-    <a asp-action="Index">Back to List</a>
 </div>
 
 @section Scripts {
