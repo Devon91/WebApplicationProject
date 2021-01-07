@@ -40,7 +40,7 @@ namespace WebApplicationProject.Controllers
             }
 
             var album = await _context.Albums
-                .Include(x => x.Band)
+                //.Include(x => x.Band)
                 //.Include(x => x.Songs)
                 .Include(x => x.Reviews).ThenInclude(y => y.Gebruiker)
                 .Include(x => x.Genre)
@@ -59,13 +59,16 @@ namespace WebApplicationProject.Controllers
         }
 
         // GET: Album/Create
+        [Authorize]
         public IActionResult Create(int? id)
         {
             CreateAlbumViewModel viewModel = new CreateAlbumViewModel();
 
             viewModel.Band = _context.Bands.FirstOrDefault(x => x.BandID == id);
+            
 
             viewModel.Album = new Album();
+            viewModel.Album.ReleaseDate = DateTime.Now;
             viewModel.Genres = new SelectList(_context.Genres, "GenreID", "Name");
             viewModel.Bands = new SelectList(_context.Bands, "BandID", "Name", viewModel.Band.BandID);
 
@@ -77,6 +80,7 @@ namespace WebApplicationProject.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public async Task<IActionResult> Create(CreateAlbumViewModel viewModel, int id)
         {
             if (id > 0)
@@ -106,11 +110,11 @@ namespace WebApplicationProject.Controllers
             }
 
             viewModel.Genres = new SelectList(_context.Genres, "GenreID", "Name", viewModel.Album.GenreID);
-            //viewModel.Bands = new SelectList(_context.Bands, "BandID", "Name", viewModel.Album.BandID);
             return View(viewModel);
         }
 
         // GET: Album/Edit/5
+        [Authorize]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -121,15 +125,13 @@ namespace WebApplicationProject.Controllers
             CreateAlbumViewModel viewModel = new CreateAlbumViewModel();
             viewModel.Album = await _context.Albums.FindAsync(id);
             
-
-            //var album = await _context.Albums.FindAsync(id);
             if (viewModel.Album == null)
             {
                 return NotFound();
             }
+
             viewModel.Genres = new SelectList(_context.Genres, "GenreID", "Name", viewModel.Album.GenreID);
             viewModel.Bands = new SelectList(_context.Bands, "BandID", "Name", viewModel.Album.BandID);
-            //viewModel.Album.CoverArt = viewModel.Album.CoverArt;
             return View(viewModel);
         }
 
@@ -138,14 +140,13 @@ namespace WebApplicationProject.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public async Task<IActionResult> Edit(int id, CreateAlbumViewModel viewModel)
         {
             if (id != viewModel.Album.AlbumID)
             {
                 return NotFound();
             }
-
-            //viewModel.Album.CoverArt = _context.Albums.SingleOrDefault(x => x.AlbumID == id).CoverArt;
 
             if (ModelState.IsValid)
             {
@@ -216,7 +217,7 @@ namespace WebApplicationProject.Controllers
             var album = await _context.Albums.FindAsync(id);
             _context.Albums.Remove(album);
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(LatestReleases));
         }
 
         private bool AlbumExists(int id)

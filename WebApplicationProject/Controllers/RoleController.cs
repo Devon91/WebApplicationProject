@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -44,6 +45,7 @@ namespace WebApplicationProject.Controllers
         }
 
         // GET: Role/Create
+        [Authorize]
         public IActionResult Create()
         {
             return View();
@@ -54,18 +56,32 @@ namespace WebApplicationProject.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public async Task<IActionResult> Create([Bind("RoleID,Name")] Role role)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(role);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                List<Role> roles = _context.ArtistRoles.ToList();
+
+                if (!roles.Contains(role))
+                {
+                    _context.Add(role);
+                    await _context.SaveChangesAsync();
+
+                    return RedirectToAction(nameof(Index));
+                }
+                else
+                {
+                    ModelState.AddModelError(nameof(role.Name),
+                    $"This {nameof(role.Name)} already exists.");
+                }
+
             }
             return View(role);
         }
 
         // GET: Role/Edit/5
+        [Authorize]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -74,6 +90,7 @@ namespace WebApplicationProject.Controllers
             }
 
             var role = await _context.ArtistRoles.FindAsync(id);
+
             if (role == null)
             {
                 return NotFound();
@@ -86,6 +103,7 @@ namespace WebApplicationProject.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public async Task<IActionResult> Edit(int id, [Bind("RoleID,Name")] Role role)
         {
             if (id != role.RoleID)
@@ -97,8 +115,20 @@ namespace WebApplicationProject.Controllers
             {
                 try
                 {
-                    _context.Update(role);
-                    await _context.SaveChangesAsync();
+                    List<Role> roles = _context.ArtistRoles.AsNoTracking().ToList();
+
+                    if (!roles.Contains(role))
+                    {
+                        _context.Update(role);
+                        await _context.SaveChangesAsync();
+
+                        return RedirectToAction(nameof(Index));
+                    }
+                    else
+                    {
+                        ModelState.AddModelError(nameof(role.Name),
+                        $"This {nameof(role.Name)} already exists.");
+                    }
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -111,12 +141,12 @@ namespace WebApplicationProject.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
             }
             return View(role);
         }
 
         // GET: Role/Delete/5
+        [Authorize]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -137,6 +167,7 @@ namespace WebApplicationProject.Controllers
         // POST: Role/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var role = await _context.ArtistRoles.FindAsync(id);

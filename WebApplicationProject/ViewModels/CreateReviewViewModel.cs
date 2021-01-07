@@ -10,8 +10,7 @@ namespace WebApplicationProject.ViewModels
     public class CreateReviewViewModel
     {
         public Review Review { get; set; }
-        //public SelectList Albums { get; set; }
-        //public int AlbumID { get; set; }
+
         public Gebruiker Gebruiker { get; set; }
         public string UserName { get; set; }
         public Album Album { get; set; }
