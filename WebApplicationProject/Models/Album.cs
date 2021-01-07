@@ -17,19 +17,11 @@ namespace WebApplicationProject.Models
         public int GenreID { get; set; }
         public Genre Genre { get; set; }
 
-        ////test
-        //[NotMapped]
-        //[DisplayName("Upload File")]
-        //public IFormFile ImageFile { get; set; }
-        ////end test
-
         public string CoverArt { get; set; }
         public int BandID { get; set; }
 
         public Band Band { get; set; }
 
-        //[Display(Name = "Datum aangemaakt")]
-        
         [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
         public DateTime ReleaseDate { get; set; }
