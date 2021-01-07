@@ -70,9 +70,8 @@ namespace WebApplicationProject.Controllers
 
                 _context.Add(viewModel.Song);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Details), "Album", new { id });
-                //return RedirectToAction(nameof(Index));
 
+                return RedirectToAction(nameof(Details), "Album", new { id });
             }
             viewModel.Albums = new SelectList(_context.Albums, "AlbumID", "Title", viewModel.Song.AlbumID);
             return View(viewModel);
@@ -95,8 +94,6 @@ namespace WebApplicationProject.Controllers
             {
                 return NotFound();
             }
-
-            //viewModel.Albums = new SelectList(_context.Albums, "AlbumID", "Title", viewModel.Song.AlbumID);
 
             return View(viewModel);
         }
@@ -135,7 +132,6 @@ namespace WebApplicationProject.Controllers
                     }
                 }
                 return RedirectToAction(nameof(Details), "Album", new { id = viewModel.Song.AlbumID });
-                //return RedirectToAction(nameof(Index));
             }
             return View(viewModel);
         }
@@ -166,8 +162,10 @@ namespace WebApplicationProject.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var song = await _context.Songs.FindAsync(id);
+
             _context.Songs.Remove(song);
             await _context.SaveChangesAsync();
+
             return RedirectToAction(nameof(Details), "Album", new { id = song.AlbumID});
         }
 

@@ -129,9 +129,6 @@ namespace WebApplicationProject.Controllers
                         ModelState.AddModelError(nameof(role.Name),
                         $"This {nameof(role.Name)} already exists.");
                     }
-
-                    //_context.Update(role);
-                    //await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {

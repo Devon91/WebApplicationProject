@@ -110,7 +110,6 @@ namespace WebApplicationProject.Controllers
             }
 
             viewModel.Genres = new SelectList(_context.Genres, "GenreID", "Name", viewModel.Album.GenreID);
-            //viewModel.Bands = new SelectList(_context.Bands, "BandID", "Name", viewModel.Album.BandID);
             return View(viewModel);
         }
 
@@ -126,15 +125,13 @@ namespace WebApplicationProject.Controllers
             CreateAlbumViewModel viewModel = new CreateAlbumViewModel();
             viewModel.Album = await _context.Albums.FindAsync(id);
             
-
-            //var album = await _context.Albums.FindAsync(id);
             if (viewModel.Album == null)
             {
                 return NotFound();
             }
+
             viewModel.Genres = new SelectList(_context.Genres, "GenreID", "Name", viewModel.Album.GenreID);
             viewModel.Bands = new SelectList(_context.Bands, "BandID", "Name", viewModel.Album.BandID);
-            //viewModel.Album.CoverArt = viewModel.Album.CoverArt;
             return View(viewModel);
         }
 
@@ -150,8 +147,6 @@ namespace WebApplicationProject.Controllers
             {
                 return NotFound();
             }
-
-            //viewModel.Album.CoverArt = _context.Albums.SingleOrDefault(x => x.AlbumID == id).CoverArt;
 
             if (ModelState.IsValid)
             {

@@ -129,8 +129,6 @@ namespace WebApplicationProject.Controllers
                         ModelState.AddModelError(nameof(genre.Name),
                         $"This {nameof(genre.Name)} already exists.");
                     }
-                    //_context.Update(genre);
-                    //await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {

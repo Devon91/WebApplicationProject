@@ -78,10 +78,6 @@ namespace WebApplicationProject.Controllers
         [Authorize]
         public IActionResult Create()
         {
-            //CreateBandViewModel viewModel = new CreateBandViewModel();
-            //viewModel.Band = new Band();
-            //viewModel.Artists = new SelectList(_context.Artists, "ArtistID", "FirstName");
-            //viewModel.Roles = new SelectList(_context.Roles, "RoleID", "Name");
             return View();
         }
 
@@ -111,7 +107,6 @@ namespace WebApplicationProject.Controllers
                     ModelState.AddModelError(nameof(band.Name),
                     $"This {nameof(band.Name)} already exists.");
                 }
-                //return RedirectToAction(nameof(Index));
             }
             return View(band);
         }
@@ -178,7 +173,6 @@ namespace WebApplicationProject.Controllers
                         throw;
                     }
                 }
-                //return RedirectToAction(nameof(Index));
             }
             return View(band);
         }

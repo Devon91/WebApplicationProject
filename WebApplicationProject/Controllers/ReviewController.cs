@@ -51,12 +51,12 @@ namespace WebApplicationProject.Controllers
         [Authorize]
         public IActionResult Create(int id)
         {
-            CreateReviewViewModel viewModel = new CreateReviewViewModel();
-            viewModel.Review = new Review();
-            viewModel.Album = _context.Albums.FirstOrDefault(x => x.AlbumID == id);
-            //viewModel.Review.Album = _context.Albums.FirstOrDefault(x => x.AlbumID == id);
-            //viewModel.Review.Album.AlbumID = id;
-            //viewModel.Albums = new SelectList(_context.Albums, "AlbumID", "Title");
+            CreateReviewViewModel viewModel = new CreateReviewViewModel
+            {
+                Review = new Review(),
+                Album = _context.Albums.FirstOrDefault(x => x.AlbumID == id)
+            };
+
             return View(viewModel);
         }
 
@@ -76,15 +76,8 @@ namespace WebApplicationProject.Controllers
                 _context.Add(viewModel.Review);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Details), "Album", new { id });
-                //return RedirectToAction(nameof(Index));
             }
-            else
-            {
-                //var errors = ModelState.Select(x => x.Value.Errors)
-                //                       .Where(y => y.Count > 0)
-                //                       .ToList();
-            }
-            //viewModel.Albums = new SelectList(_context.Albums, "AlbumID", "Title", viewModel.Review.Album.AlbumID);
+
             return View(viewModel);
         }
 
@@ -142,7 +135,6 @@ namespace WebApplicationProject.Controllers
                     }
                 }
                 return RedirectToAction(nameof(Details), "Album", new { id = albumID });
-                //return RedirectToAction(nameof(Index));
             }
             return View(viewModel.Review);
         }
