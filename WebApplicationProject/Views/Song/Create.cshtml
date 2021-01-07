@@ -17,23 +17,12 @@
                 <input asp-for="Song.Title" class="form-control" />
                 <span asp-validation-for="Song.Title" class="text-danger"></span>
             </div>
-            @*<div class="form-group">
-                <label asp-for="Song.TrackLength" class="control-label"></label>
-                <input asp-for="Song.TrackLength" class="form-control" />
-                <span asp-validation-for="Song.TrackLength" class="text-danger"></span>
-            </div>*@
             <div class="form-group">
                 <label asp-for="Song.TrackNumber" class="control-label"></label>
                 <input asp-for="Song.TrackNumber" type="number" min="1" max="30" value="1" class="form-control" />
                 <span asp-validation-for="Song.TrackNumber" class="text-danger"></span>
             </div>
-            @*<div class="form-group">
-                <label asp-for="Song.AlbumID" class="control-label">Album</label>
-                <select asp-for="Song.AlbumID" class="form-control" asp-items="Model.Albums"></select>
-                <span asp-validation-for="Song.AlbumID" class="text-danger"></span>
-            </div>*@
         <div class="form-group">
-            @*<input type="submit" value="Create" class="btn btn-primary" />*@
             <input asp-action="Create" asp-route-id="@Model.AlbumID" type="submit" value="Create" class="btn btn-dark" />
             <a class="btn btn-dark" asp-action="Details" asp-controller="Album" asp-route-id="@Model.AlbumID">Back to Album</a>
         </div>

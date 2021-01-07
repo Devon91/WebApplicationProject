@@ -22,11 +22,6 @@
                 <input asp-for="BandArtist.LeaveDate" type="date" class="form-control" />
                 <span asp-validation-for="BandArtist.LeaveDate" class="text-danger"></span>
             </div>
-            @*<div class="form-group">
-                <label asp-for="BandArtist.BandID" class="control-label">Band</label>
-                <select asp-for="BandArtist.BandID" class="form-control" asp-items="Model.Bands"></select>
-                <span asp-validation-for="BandArtist.BandID" class="text-danger"></span>
-            </div>*@
             <div class="form-group">
                 <label asp-for="BandArtist.RoleID" class="control-label">Role</label>
                 <select asp-for="BandArtist.RoleID" class="form-control" asp-items="Model.Roles"></select>
@@ -42,11 +37,6 @@
                 <input asp-for="BandArtist.Artist.LastName" class="form-control">
                 <span asp-validation-for="BandArtist.Artist.LastName" class="text-danger"></span>
             </div>
-            @*<div class="form-group">
-                <label asp-for="BandArtist.ArtistID" class="control-label">Artist</label>
-                <select asp-for="BandArtist.ArtistID" class="form-control" asp-items="Model.Artists"></select>
-                <span asp-validation-for="BandArtist.ArtistID" class="text-danger"></span>
-            </div>*@
         <div class="form-group">
             <input type="submit" value="Create" class="btn btn-dark" asp-route-id="@Model.Band.BandID" />
             <a class="btn btn-dark" asp-action="Details" asp-controller="Band" asp-route-id="@Model.Band.BandID">Back to Band</a>

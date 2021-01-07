@@ -30,37 +30,21 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Album" asp-action="LatestReleases">Latest Releases</a>
                         </li>
-                        @*<li class="nav-item">
-            <a class="nav-link text-dark" asp-area="" asp-controller="Album" asp-action="Index">Albums</a>
-        </li>*@
-                        @*<li class="nav-item">
-            <a class="nav-link text-dark" asp-area="" asp-controller="Artist" asp-action="Create">Artists</a>
-        </li>*@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Band" asp-action="Index">Bands</a>
                         </li>
-                        @*<li class="nav-item">
-            <a class="nav-link text-dark" asp-area="" asp-controller="BandArtist" asp-action="Index">Artists</a>
-        </li>*@
                         @if (User.IsInRole("Admin"))
                         {
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Genre" asp-action="Index">Genres</a>
                             </li>
                         }
-
-                        @*<li class="nav-item">
-            <a class="nav-link text-dark" asp-area="" asp-controller="Review" asp-action="Index">Reviews</a>
-        </li>*@
                         @if (User.IsInRole("Admin"))
                         {
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Role" asp-action="Index">Roles</a>
                             </li>
                         }
-                        @*<li class="nav-item">
-            <a class="nav-link text-dark" asp-area="" asp-controller="Song" asp-action="Index">Songs</a>
-        </li>*@
                     </ul>
                 </div>
             </div>

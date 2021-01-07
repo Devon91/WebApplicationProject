@@ -50,11 +50,6 @@
                 <input asp-for="Album.Award" class="form-control" />
                 <span asp-validation-for="Album.Award" class="text-danger"></span>
             </div>
-            @*<div class="form-group">
-                <label asp-for="Album.BandID" class="control-label">Band</label>
-                <select asp-for="Album.BandID" class="form-control" asp-items="Model.Bands"></select>
-                <span asp-validation-for="Album.BandID" class="text-danger"></span>
-            </div>*@
             <div class="form-group">
                 <label asp-for="Album.GenreID" class="control-label">Genre</label>
                 <select asp-for="Album.GenreID" class="form-control" asp-items="Model.Genres"></select>

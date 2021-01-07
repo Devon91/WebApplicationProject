@@ -14,7 +14,7 @@
 
 
 <div>
-    @foreach (var item in Model)
+    @foreach (var album in Model)
     {
         var insertRow = itemCount % 3 == 0;
 
@@ -22,16 +22,14 @@
         {
             @Html.Raw("<div class='row'>")
         }
-
-        @*<div class="row">*@
         <div class="col-md-4">
-            <h1 class="text-center">@Html.DisplayFor(model => item.Band.Name)</h1>
-            <h2 class="text-center">@Html.DisplayFor(model => item.Title)</h2>
+            <h1 class="text-center">@Html.DisplayFor(model => album.Band.Name)</h1>
+            <h2 class="text-center">@Html.DisplayFor(model => album.Title)</h2>
             <div class="text-center">
-                <a asp-action="Details" asp-controller="Album" asp-route-id="@item.AlbumID">
-                    @if (item.CoverArt != null)
+                <a asp-action="Details" asp-controller="Album" asp-route-id="@album.AlbumID">
+                    @if (album.CoverArt != null)
                     {
-                        <img src="~/images/@item.CoverArt"
+                        <img src="~/images/@album.CoverArt"
                              height="200" width="200" />
                     }
                     else
@@ -40,7 +38,7 @@
                     }
                 </a>
             </div>
-            <p class="text-center">@Html.DisplayFor(model => item.ReleaseDate)</p>
+            <p class="text-center">@Html.DisplayFor(model => album.ReleaseDate)</p>
         </div>
 
         itemCount++;

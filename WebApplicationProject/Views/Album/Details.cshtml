@@ -72,12 +72,12 @@
             @if (Model.Band.BandArtists.Count > 0)
             {
                 <ul class="list-unstyled">
-                    @foreach (var item in Model.Band.BandArtists)
+                    @foreach (var bandArtist in Model.Band.BandArtists)
                     {
                         <li>
-                            @item.Role.Name:
-                            @item.Artist.FirstName
-                            @item.Artist.LastName
+                            @bandArtist.Role.Name:
+                            @bandArtist.Artist.FirstName
+                            @bandArtist.Artist.LastName
                         </li>
                     }
                 </ul>
@@ -141,21 +141,21 @@
             @if (Model.Reviews.Count > 0)
             {
                 <div>
-                    @foreach (var item in Model.Reviews)
+                    @foreach (var review in Model.Reviews)
                     {
-                        <div>@item.Text</div>
+                        <div>@review.Text</div>
                         <div>
                             <div>
-                                @if (item.Gebruiker.Email == User.Identity.Name)
+                                @if (review.Gebruiker.Email == User.Identity.Name)
                                 {
-                                    <a asp-action="Edit" asp-route-id="@item.ReviewID" asp-route-albumID="@item.Album.AlbumID" asp-controller="Review">Edit</a>
+                                    <a asp-action="Edit" asp-route-id="@review.ReviewID" asp-route-albumID="@review.Album.AlbumID" asp-controller="Review">Edit</a>
                                 }
-                                @if (item.Gebruiker.Email == User.Identity.Name || User.IsInRole("Admin"))
+                                @if (review.Gebruiker.Email == User.Identity.Name || User.IsInRole("Admin"))
                                 {
-                                    <a class="ml-3" asp-action="Delete" asp-route-id="@item.ReviewID" asp-route-albumID="@item.Album.AlbumID" asp-route-userName="@item.Gebruiker.UserName" asp-controller="Review">Delete</a>
+                                    <a class="ml-3" asp-action="Delete" asp-route-id="@review.ReviewID" asp-route-albumID="@review.Album.AlbumID" asp-route-userName="@review.Gebruiker.UserName" asp-controller="Review">Delete</a>
                                 }
-                                <p class="pt-2 text-right">@item.Gebruiker.UserName</p>
-                                <p class="text-right">@item.ReviewRating</p>
+                                <p class="pt-2 text-right">@review.Gebruiker.UserName</p>
+                                <p class="text-right">@review.ReviewRating</p>
                             </div>
                         </div>
                     }
